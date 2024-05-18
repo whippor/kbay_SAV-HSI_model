@@ -31,9 +31,15 @@ intermediate_dir <- "data/b_intermediate_data"
 
 #### bathymetry directory
 dir.create(paste0(intermediate_dir, "/",
+                  "roi"))
+
+#### bathymetry directory
+dir.create(paste0(intermediate_dir, "/",
                   "bathymetry"))
 
 bathymetry_dir <- "data/b_intermediate_data/bathymetry"
+
+roi_dir <- "data/b_intermediate_data/roi"
 
 #####################################
 #####################################
@@ -47,6 +53,10 @@ crs <- "EPSG:3338"
 # define vector for region of interest
 roi <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/LDA_2016.kml")
 roi <- project(roi, crs)
+
+# export roi
+terra::writeVector(roi, filename = file.path(roi_dir, "roi.shp"), overwrite = T)
+
 
 #####################################
 #####################################
@@ -79,7 +89,7 @@ bathymetry
 bathy_roi <- terra::crop(bathymetry, roi)
 
 # plot new raster
-plot(bathy_roi)
+plot(bathy_roi, col = viridis(nrow(bathy_roi)))
 
 #####################################
 #####################################

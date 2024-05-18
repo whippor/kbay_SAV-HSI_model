@@ -29,7 +29,7 @@ data_dir <- "data/a_raw_data/substrate"
 #### Intermediate directories
 intermediate_dir <- "data/b_intermediate_data"
 
-#### bathymetry directory
+#### substrate directory
 dir.create(paste0(intermediate_dir, "/",
                   "substrate"))
 
@@ -50,8 +50,6 @@ roi <- project(roi, crs)
 
 # import bathymetry as base raster
 bathymetry <- terra::rast("~/git/kbay_SAV-HSI_model/data/b_intermediate_data/bathymetry/bathymetry.grd")
-bathymetry[] <- NA
-
 
 #####################################
 #####################################
@@ -62,12 +60,25 @@ substrate <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/Kachemak_Subt
 ## reproject into Alaska Albers
 subs_albers <- project(substrate, crs)
 
+## reduce to fewer categories
+subs_df <- data.frame(subs_albers)
+subs_df <- subs_df %>% 
+  mutate(A = coalesce(Sub_subgr, Sub_grp)) %>%
+  mutate(substrate = coalesce(A, Class))
+avoid <- c("Void", 
+           "Shell 50-90%, Cobble/gravel 0-10%",
+           "Shell 90-100%")
+subs_df$substrate <- replace(subs_df$substrate, 
+                             subs_df$substrate %in% avoid, 
+                             "Unclassified")
+subs_albers[["substrate"]] <- subs_df$substrate
+
 ## make polygons into raster
-subs_rast <- rasterize(subs_albers, bathymetry, "Class")
+subs_rast <- rasterize(subs_albers, bathymetry, "substrate")
 
 # inspect the data
 ## coordinate reference system
-terra::crs(subs_rast) # EPSG:4269 - UTM 5N
+terra::crs(subs_rast) # EPSG:3338
 cat(crs(subs_rast))
 
 ## resolution
@@ -76,33 +87,34 @@ terra::res(subs_rast) # 50 50
 #####################################
 #####################################
 
-# constrain bathymetry to roi
-bathy_roi <- terra::crop(bathymetry, roi)
+# expand substrate raster to bathymetry layer
+subs_expand <- terra::extend(subs_rast, bathymetry)
+varnames(subs_expand) <- "substrate"
+
+# fill empty space in raster with Unclassified
+unclass_rast <- rast(ncol = 1064,
+                     nrow = 994,
+                     xmin = 119250,
+                     xmax = 172450,
+                     ymin = 1046527, 
+                     ymax = 1096227,
+                     crs = crs(subs_expand))
+values(unclass_rast) <- 5 
+names(unclass_rast) <- "substrate"
+subs_final <- terra::merge(subs_expand, unclass_rast)
 
 # plot new raster
-plot(bathy_roi)
+plot(subs_final, col = viridis(nrow(subs_final)))
 
 #####################################
 #####################################
 
 # export raster file
-terra::writeRaster(bathy_roi, filename = file.path(bathymetry_dir, "bathymetry.grd"), overwrite = T)
+terra::writeRaster(subs_final, filename = file.path(substrate_dir, "substrate.grd"), overwrite = T)
 
 #####################################
 #####################################
 
 # calculate end time and print time difference
 print(Sys.time() - start) # print how long it takes to calculate
-
-
-
-
-
-
-
-
-
-
-
-
 
