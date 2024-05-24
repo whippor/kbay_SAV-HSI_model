@@ -99,7 +99,8 @@ unclass_rast <- rast(ncol = 1064,
                      ymin = 1046527, 
                      ymax = 1096227,
                      crs = crs(subs_expand))
-values(unclass_rast) <- 5 
+levels(unclass_rast) <- "Unclassified" 
+values(unclass_rast) <- 5
 names(unclass_rast) <- "substrate"
 subs_final <- terra::merge(subs_expand, unclass_rast)
 
@@ -110,7 +111,7 @@ plot(subs_final, col = viridis(nrow(subs_final)))
 #####################################
 
 # export raster file
-terra::writeRaster(subs_final, filename = file.path(substrate_dir, "substrate.grd"), overwrite = T)
+terra::writeRaster(subs_final, filename = file.path(substrate_dir, "substrate.tif"), overwrite = T)
 
 #####################################
 #####################################

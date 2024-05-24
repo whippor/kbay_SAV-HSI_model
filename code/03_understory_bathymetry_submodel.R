@@ -51,8 +51,6 @@ bathymetry <- terra::rast("data/b_intermediate_data/bathymetry/bathymetry.grd")
 tam_bath <- read_csv("data/x_tam_tables/understorey/understorey_depth.csv")
 tam_bath <- tam_bath %>%
   arrange(depth.m)
-xvalue <- names(tam_bath[1])
-yvalue <- names(tam_bath[2])
 
 #####################################
 #####################################
