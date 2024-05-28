@@ -105,7 +105,7 @@ names(unclass_rast) <- "substrate"
 subs_final <- terra::merge(subs_expand, unclass_rast)
 
 # plot new raster
-plot(subs_final, col = viridis(nrow(subs_final)))
+plot(subs_final, col = viridis(nrow(subs_final), begin = 0.3))
 
 #####################################
 #####################################

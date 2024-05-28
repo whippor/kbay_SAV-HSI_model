@@ -101,6 +101,9 @@ index_vals <- interpolate_y(vals1$KBL.bathymetry_GWA.area_50m_EPSG3338)
 # join HSI values with raster
 bath_mask[["HSI_value"]] <- index_vals
 
+# check plot
+plot(bath_mask, col = viridis(nrow(bath_mask), begin = 0.3))
+
 #####################################
 #####################################
 

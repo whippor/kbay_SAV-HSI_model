@@ -89,7 +89,7 @@ bathymetry
 bathy_roi <- terra::crop(bathymetry, roi)
 
 # plot new raster
-plot(bathy_roi, col = viridis(nrow(bathy_roi)))
+plot(bathy_roi, col = viridis(nrow(bathy_roi), begin = 0.3))
 
 #####################################
 #####################################

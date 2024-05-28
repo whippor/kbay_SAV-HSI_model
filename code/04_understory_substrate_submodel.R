@@ -89,13 +89,17 @@ index_vals <- vals1 %>%
 # join HSI values with raster
 subs_mask[["HSI_value"]] <- index_vals
 
+# check plot
+# check plot
+plot(subs_mask, col = viridis(nrow(subs_mask), begin = 0.3))
+
 #####################################
 #####################################
 
 # Export data
 ## Suitability
 terra::writeRaster(subs_mask, 
-                   filename = file.path(submodel_dir, "bathymetryHSI.tif"), 
+                   filename = file.path(submodel_dir, "substrateHSI.grd"), 
                    overwrite = T)
 
 
