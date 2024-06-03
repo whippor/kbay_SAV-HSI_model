@@ -46,9 +46,9 @@ roi <- terra::vect(roi_dir)
 #####################################
 
 # load data
-substrate <- terra::rast("data/c_submodel_data/substrate_HSI/substrateHSI.grd")
+substrate <- terra::rast("data/c_submodel_data/understorey_substrate_HSI/substrateHSI.grd")
 
-bathymetry <- terra::rast("data/c_submodel_data/bathymetry_HSI/bathymetryHSI.grd")
+bathymetry <- terra::rast("data/c_submodel_data/understorey_bathymetry_HSI/bathymetryHSI.grd")
 
 #####################################
 #####################################
@@ -73,8 +73,8 @@ plot(final_zero, col = viridis(nrow(final_zero), begin = 0.3))
 
 # Export data
 ## Suitability
-terra::writeRaster(subs_mask, 
-                   filename = file.path(submodel_dir, "bathymetryHSI.tif"), 
+terra::writeRaster(final_zero, 
+                   filename = file.path(submodel_dir, "understorey_HSI.tif"), 
                    overwrite = T)
 
 

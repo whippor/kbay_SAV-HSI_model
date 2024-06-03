@@ -1,5 +1,5 @@
 ##########################################
-### 4. Understorey Substrate submodel ####
+### 5. Understorey Substrate submodel ####
 ##########################################
 
 # clear environment
@@ -27,8 +27,8 @@ roi_dir <- "data/b_intermediate_data/roi"
 
 ### output directories
 #### submodel directory
-dir.create("data/c_submodel_data/substrate_HSI")
-submodel_dir <- "data/c_submodel_data/substrate_HSI"
+dir.create("data/c_submodel_data/understorey_substrate_HSI")
+submodel_dir <- "data/c_submodel_data/understorey_substrate_HSI"
 
 #####################################
 #####################################
@@ -46,7 +46,7 @@ roi <- terra::vect(roi_dir)
 #####################################
 
 # load data
-substrate <- terra::rast("data/b_intermediate_data/substrate/substrate.tif")
+substrate <- terra::rast("data/b_intermediate_data/understorey_substrate/substrate.tif")
 
 tam_subs <- read_csv("data/x_tam_tables/understorey/understorey_substrate.csv")
 

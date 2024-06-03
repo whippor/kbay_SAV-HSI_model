@@ -27,8 +27,8 @@ roi_dir <- "data/b_intermediate_data/roi"
 
 ### output directories
 #### submodel directory
-dir.create("data/c_submodel_data/bathymetry_HSI")
-submodel_dir <- "data/c_submodel_data/bathymetry_HSI"
+dir.create("data/c_submodel_data/understorey_bathymetry_HSI")
+submodel_dir <- "data/c_submodel_data/understorey_bathymetry_HSI"
 
 #####################################
 #####################################
@@ -46,7 +46,7 @@ roi <- terra::vect(roi_dir)
 #####################################
 
 # load data
-bathymetry <- terra::rast("data/b_intermediate_data/bathymetry/bathymetry.grd")
+bathymetry <- terra::rast("data/b_intermediate_data/understorey_bathymetry/bathymetry.grd")
 
 tam_bath <- read_csv("data/x_tam_tables/understorey/understorey_depth.csv")
 tam_bath <- tam_bath %>%
