@@ -1,9 +1,9 @@
-#####################
-### 2. Substrate  ###
-#####################
+#############################
+### 12. Canopy Substrate  ###
+#############################
 
 # clear environment
-rm(list = ls())
+rm(list=setdiff(ls(), "all_begin"))
 
 # calculate start time of code (determine how long it takes to complete all code)
 start <- Sys.time()
@@ -31,9 +31,9 @@ intermediate_dir <- "data/b_intermediate_data"
 
 #### substrate directory
 dir.create(paste0(intermediate_dir, "/",
-                  "substrate"))
+                  "canopy_substrate"))
 
-substrate_dir <- "data/b_intermediate_data/substrate"
+substrate_dir <- "data/b_intermediate_data/canopy_substrate"
 
 #####################################
 #####################################
@@ -49,7 +49,7 @@ roi <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/LDA_2016.kml")
 roi <- project(roi, crs)
 
 # import bathymetry as base raster
-bathymetry <- terra::rast("~/git/kbay_SAV-HSI_model/data/b_intermediate_data/bathymetry/bathymetry.grd")
+bathymetry <- terra::rast("~/git/kbay_SAV-HSI_model/data/b_intermediate_data/canopy_bathymetry/bathymetry.grd")
 
 #####################################
 #####################################

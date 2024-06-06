@@ -1,9 +1,9 @@
-#####################
-### 2. Substrate  ###
-#####################
+#################################
+### 2. Understorey Substrate  ###
+#################################
 
 # clear environment
-rm(list = ls())
+rm(list=setdiff(ls(), "all_begin"))
 
 # calculate start time of code (determine how long it takes to complete all code)
 start <- Sys.time()

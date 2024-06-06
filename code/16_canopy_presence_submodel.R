@@ -1,9 +1,9 @@
-##########################################
-### 5. Understorey Substrate submodel ####
-##########################################
+#####################################
+### 16. Canopy Presence submodel ####
+#####################################
 
 # clear environment
-rm(list = ls())
+rm(list=setdiff(ls(), "all_begin"))
 
 # calculate start time of code (determine how long it takes to complete all code)
 start <- Sys.time()
@@ -27,8 +27,8 @@ roi_dir <- "data/b_intermediate_data/roi"
 
 ### output directories
 #### submodel directory
-dir.create("data/c_submodel_data/substrate_HSI")
-submodel_dir <- "data/c_submodel_data/substrate_HSI"
+dir.create("data/c_submodel_data/canopy_presence_HSI")
+submodel_dir <- "data/c_submodel_data/canopy_presence_HSI"
 
 #####################################
 #####################################
@@ -46,60 +46,45 @@ roi <- terra::vect(roi_dir)
 #####################################
 
 # load data
-substrate <- terra::rast("data/b_intermediate_data/substrate/substrate.tif")
-
-tam_subs <- read_csv("data/x_tam_tables/understorey/understorey_substrate.csv")
+presence <- terra::rast("data/b_intermediate_data/canopy_presence/presence.tif")
 
 #####################################
 #####################################
 
-# Create bathymetry HSI model
-# mask bathymetry to the roi
-subs_mask <- mask(substrate, roi)
+# Create presence HSI model
+# mask presence to the roi
+subs_mask <- mask(presence, roi)
 
 # plot to check for correct values
 # plot(subs_mask, col = viridis(nrow(subs_mask)))
 
-# extract all values from subs roi
+# extract all values from subs roi and give 50/50 chance of kelp in unknown areas
 vals1 <- data.frame(values(subs_mask))
-vals1 <- vals1 %>%
-  rename("value" = "substrate")
-
-# ASSIGN HSI VALUES TO EACH SUBSTRATE CLASS
-## Check value <-> level associations
-subs_values <- data.frame(levels(subs_mask))
-### 0 Boulder
-### 1 Cobble/Pebble
-### 2 Land
-### 3 Mud
-### 4 Sand
-### 5 Unclassified
-
-## join tam and values tables
-tam_subs_new <- tam_subs %>%
-  rename("substrate" = "substrate.class")
-join_ID <- tam_subs_new %>%
-  full_join(subs_values) 
-
-# join HSI and raster values 
 index_vals <- vals1 %>%
-  left_join(join_ID) %>%
-  select(substrate.class.SIV)
+  mutate(sumkelp = rowSums(select(.,c("kelp", "kelp.1", "kelp.2")), na.rm = TRUE)) %>%
+  mutate(presence = case_when(sumkelp == 1 ~ 1,
+                              sumkelp == 2 ~ 1,
+                              sumkelp == 3 ~ 1,
+                              sumkelp == 0 ~ 0.5)) %>%
+  select(presence)
 
 # join HSI values with raster
 subs_mask[["HSI_value"]] <- index_vals
 
+# subset to just HSI values
+hsi_mask <- subs_mask[["HSI_value"]]
+
 # check plot
 # check plot
-plot(subs_mask, col = viridis(nrow(subs_mask), begin = 0.3))
+plot(hsi_mask, col = viridis(nrow(hsi_mask), begin = 0.3))
 
 #####################################
 #####################################
 
 # Export data
 ## Suitability
-terra::writeRaster(subs_mask, 
-                   filename = file.path(submodel_dir, "substrateHSI.grd"), 
+terra::writeRaster(hsi_mask, 
+                   filename = file.path(submodel_dir, "presenceHSI.grd"), 
                    overwrite = T)
 
 

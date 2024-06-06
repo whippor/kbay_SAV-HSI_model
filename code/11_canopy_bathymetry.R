@@ -1,9 +1,9 @@
-#####################
-### 1. Bathymetry ###
-#####################
+#############################
+### 11. Canopy Bathymetry ###
+#############################
 
 # clear environment
-rm(list = ls())
+rm(list=setdiff(ls(), "all_begin"))
 
 # calculate start time of code (determine how long it takes to complete all code)
 start <- Sys.time()
@@ -35,9 +35,9 @@ dir.create(paste0(intermediate_dir, "/",
 
 #### bathymetry directory
 dir.create(paste0(intermediate_dir, "/",
-                  "bathymetry"))
+                  "canopy_bathymetry"))
 
-bathymetry_dir <- "data/b_intermediate_data/bathymetry"
+bathymetry_dir <- "data/b_intermediate_data/canopy_bathymetry"
 
 roi_dir <- "data/b_intermediate_data/roi"
 

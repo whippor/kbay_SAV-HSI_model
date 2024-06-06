@@ -1,9 +1,9 @@
-#####################
-### 3. Presence   ###
-#####################
+#############################
+### 13. Canopy Presence   ###
+#############################
 
 # clear environment
-rm(list = ls())
+rm(list=setdiff(ls(), "all_begin"))
 
 # calculate start time of code (determine how long it takes to complete all code)
 start <- Sys.time()
@@ -31,9 +31,9 @@ intermediate_dir <- "data/b_intermediate_data"
 
 #### substrate directory
 dir.create(paste0(intermediate_dir, "/",
-                  "presence"))
+                  "canopy_presence"))
 
-kelp_dir <- "data/b_intermediate_data/presence"
+kelp_dir <- "data/b_intermediate_data/canopy_presence"
 
 #####################################
 #####################################
@@ -49,7 +49,7 @@ roi <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/LDA_2016.kml")
 roi <- project(roi, crs)
 
 # import bathymetry as base raster
-bathymetry <- terra::rast("~/git/kbay_SAV-HSI_model/data/b_intermediate_data/bathymetry/bathymetry.grd")
+bathymetry <- terra::rast("~/git/kbay_SAV-HSI_model/data/b_intermediate_data/canopy_bathymetry/bathymetry.grd")
 
 #####################################
 #####################################
@@ -81,6 +81,8 @@ cat(crs(kelp)) # EPSG:3338
 ## resolution
 terra::res(kelp) # 50 50
 
+# check plot
+plot(kelp)
 
 #####################################
 #####################################
