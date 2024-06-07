@@ -68,6 +68,9 @@ final_zero <- under_zero[["HSI_value"]] *
 
 plot(final_zero, col = viridis(nrow(final_zero), begin = 0.3))
 
+plet(final_zero,
+     main = "Understorey Kelp HSI")
+
 #####################################
 #####################################
 

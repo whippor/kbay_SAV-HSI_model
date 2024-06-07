@@ -1,6 +1,9 @@
-###################################
-### 6. Understorey HSI run all ####
-##################################
+##############################
+### 18. Canopy HSI run all ###
+##############################
+
+# reproducibility
+renv::restore()
 
 # clear environment
 rm(list = ls())

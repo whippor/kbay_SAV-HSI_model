@@ -55,25 +55,27 @@ presence <- terra::rast("data/c_submodel_data/canopy_presence_HSI/presenceHSI.gr
 #####################################
 #####################################
 
-# create mean-value HSI for understorey (bathymetry, substrate, presence)
-under_mean <- mean(substrate[["HSI_value"]], 
-                   bathymetry[["HSI_value"]], 
-                   presence[["HSI_value"]], na.rm = TRUE)
-
-# create HSI setting any zero to zero 
-under_zero <- mean(substrate[["HSI_value"]], bathymetry[["HSI_value"]], presence[["HSI_value"]])
+# create HSI setting any zero to zero and taking mean of bath and subs
+under_zero <- mean(substrate[["HSI_value"]], 
+                   bathymetry[["HSI_value"]])
 sub_zero <- substrate
-subst(sub_zero[["HSI_value"]], 0.01:1, 1)
+sub_zero <- subst(sub_zero[["HSI_value"]], 0.01:1, 1)
 bath_zero <- bathymetry
-subst(bath_zero[["HSI_value"]], 0.01:1, 1)
+bath_zero <- subst(bath_zero[["HSI_value"]], 0.01:1, 1)
 pres_zero <- presence
-subst(pres_zero[["HSI_value"]], 0.01:1, 1)
-final_zero <- under_zero[["HSI_value"]] *
+pres_zero <- subst(pres_zero[["HSI_value"]], 0.01:1, 1)
+near_zero <- under_zero[["HSI_value"]] *
   sub_zero[["HSI_value"]] *
-  bath_zero[["HSI_value"]] *
-  pres_zero[["HSI_value"]]
+  bath_zero[["HSI_value"]]
+# add presence as automatic "1" to raster
+presencemask <- presence < 0.99
+presence1 <- mask(presence, presencemask, maskvalue = 1)
+final_zero <- merge(presence1, near_zero)
 
 plot(final_zero, col = viridis(nrow(final_zero), begin = 0.3))
+
+plet(final_zero,
+     main = "Canopy Kelp HSI")
 
 #####################################
 #####################################

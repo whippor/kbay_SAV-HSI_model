@@ -1,6 +1,9 @@
-###################################
-### 6. Understorey HSI run all ####
 ##################################
+### 6. Understorey HSI run all ###
+##################################
+
+# reproducibility
+renv::restore()
 
 # clear environment
 rm(list = ls())

@@ -2,6 +2,10 @@
 ### 0. Create Directories ###
 #############################
 
+# reproducibility
+# renv::snapshot()
+renv::restore()
+
 # create data directory
 data_dir <- dir.create("data")
 
