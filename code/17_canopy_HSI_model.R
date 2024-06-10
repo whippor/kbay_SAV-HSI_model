@@ -59,11 +59,11 @@ presence <- terra::rast("data/c_submodel_data/canopy_presence_HSI/presenceHSI.gr
 under_zero <- mean(substrate[["HSI_value"]], 
                    bathymetry[["HSI_value"]])
 sub_zero <- substrate
-sub_zero <- subst(sub_zero[["HSI_value"]], 0.01:1, 1)
+sub_zero[sub_zero > 0.01] <- 1
 bath_zero <- bathymetry
-bath_zero <- subst(bath_zero[["HSI_value"]], 0.01:1, 1)
+bath_zero[bath_zero > 0.01] <- 1
 pres_zero <- presence
-pres_zero <- subst(pres_zero[["HSI_value"]], 0.01:1, 1)
+pres_zero[pres_zero > 0.01] <- 1
 near_zero <- under_zero[["HSI_value"]] *
   sub_zero[["HSI_value"]] *
   bath_zero[["HSI_value"]]

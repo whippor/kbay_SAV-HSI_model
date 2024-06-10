@@ -59,11 +59,11 @@ presence <- terra::rast("data/c_submodel_data/seagrass_presence_HSI/presenceHSI.
 under_zero <- mean(substrate[["HSI_value"]], 
                    bathymetry[["HSI_value"]])
 sub_zero <- substrate
-sub_zero <- subst(sub_zero[["HSI_value"]], 0.01:1, 1)
+sub_zero[sub_zero > 0.01] <- 1
 bath_zero <- bathymetry
-bath_zero <- subst(bath_zero[["HSI_value"]], 0.01:1, 1)
+bath_zero[bath_zero > 0.01] <- 1
 pres_zero <- presence
-pres_zero <- subst(pres_zero[["HSI_value"]], 0.01:1, 1)
+pres_zero[pres_zero > 0.01] <- 1
 near_zero <- under_zero[["HSI_value"]] *
   sub_zero[["HSI_value"]] *
   bath_zero[["HSI_value"]]
@@ -95,4 +95,8 @@ print(Sys.time() - start) # print how long it takes to calculate
 
 
  
-
+r <- rast(ncols=5, nrows=5, xmin=0, xmax=5, ymin=0, ymax=5)
+r[] <- 1:25
+r[1,] <- 5
+r[,2] <- 10
+r[r>10] <- NA

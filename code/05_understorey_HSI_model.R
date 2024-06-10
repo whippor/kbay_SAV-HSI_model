@@ -59,9 +59,9 @@ under_mean <- mean(substrate[["HSI_value"]], bathymetry[["HSI_value"]])
 # create HSI setting any zero to zero 
 under_zero <- mean(substrate[["HSI_value"]], bathymetry[["HSI_value"]])
 sub_zero <- substrate
-subst(sub_zero[["HSI_value"]], 0.01:1, 1)
+sub_zero[sub_zero > 0.01] <- 1
 bath_zero <- bathymetry
-subst(bath_zero[["HSI_value"]], 0.01:1, 1)
+bath_zero[bath_zero > 0.01] <- 1
 final_zero <- under_zero[["HSI_value"]] *
   sub_zero[["HSI_value"]] *
   bath_zero[["HSI_value"]]
