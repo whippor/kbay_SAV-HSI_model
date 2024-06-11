@@ -3,7 +3,7 @@
 ##########################################
 
 # clear environment
-rm(list=setdiff(ls(), "all_begin"))
+rm(list=setdiff(ls(), c("all_begin", "master_begin")))
 
 # calculate start time of code (determine how long it takes to complete all code)
 start <- Sys.time()

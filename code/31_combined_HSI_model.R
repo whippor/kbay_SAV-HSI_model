@@ -1,12 +1,12 @@
-#######################
-### 31. HSI run all ###
-#######################
+########################
+### 31. HSI combined ###
+########################
 
 # reproducibility
 renv::restore()
 
 # clear environment
-rm(list = ls())
+rm(list = setdiff(ls(), "master_begin"))
 
 # calculate start time of code (determine how long it takes to complete all code)
 all_begin <- Sys.time()

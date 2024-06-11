@@ -9,7 +9,7 @@ renv::restore()
 rm(list = ls())
 
 # calculate start time of code (determine how long it takes to complete all code)
-all_begin <- Sys.time()
+master_begin <- Sys.time()
 
 #####################################
 #####################################
@@ -33,7 +33,7 @@ source("code/31_combined_HSI_model.R")
 #####################################
 
 # calculate end time and print time difference
-print(Sys.time() - all_begin) # print how long it takes to calculate
+print(Sys.time() - master_begin) # print how long it takes to calculate
 
 
 

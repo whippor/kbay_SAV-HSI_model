@@ -39,6 +39,7 @@ bathymetry_seagr <- terra::rast("data/b_intermediate_data/seagrass_bathymetry/ba
 #####################################
 #####################################
 
+# understorey stats
 # mask out all HSI below -30 m, above 3 m
 bathmask <- clamp(bathymetry_under, lower = -30, upper = 3, values = FALSE)
 understorey30 <- mask(understorey, 
@@ -62,10 +63,25 @@ under_df %>%
 ggplot(under_df, aes(x=HSI_value)) +
   geom_histogram(binwidth = 0.05) +
   theme_bw()
-  
+
+as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05))))
+
+# overlap of HSI = 1 understorey with canopy HSI = 1
+kelp_overlap <- c(canopy, understorey)
+kelpDF <- data.frame(kelp_overlap)  
+kelpDF %>%
+  filter(HSI_value == 1) %>%
+  tally(HSI_value.1 == 1) # 5186 cells
+canopyDF <- data.frame(canopy)
+canopyDF %>%
+  filter(HSI_value == 1) %>%
+  nrow() # 19430 cells
+# 5186/19430  ~27%
+
 #####################################
 #####################################
 
+# canopy stats
 # mask out all HSI below -30 m, above 0 m
 bathmask <- clamp(bathymetry_canop, lower = -30, upper = 0, values = FALSE)
 canopy30 <- mask(canopy, 
@@ -90,9 +106,14 @@ ggplot(under_df, aes(x=HSI_value)) +
   geom_histogram(binwidth = 0.05) +
   theme_bw()
 
+# printed frequencies
+as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05))))
+
+
 #####################################
 #####################################
 
+#seagrass stats
 # mask out all HSI below -10 m, above 1 m
 bathmask <- clamp(bathymetry_seagr, lower = -10, upper = 1, values = FALSE)
 seagrass10 <- mask(seagrass, 
@@ -116,6 +137,10 @@ under_df %>%
 ggplot(under_df, aes(x=HSI_value)) +
   geom_histogram(binwidth = 0.05) +
   theme_bw()
+
+as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05))))
+
+4295/nrow(filter(test$HSI_value ==1))
 
 #####################################
 #####################################
@@ -145,10 +170,13 @@ ggplot(under_df, aes(x=HSI_value)) +
   theme_bw()
 
 
+as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05))))
 
-
-
-
+max30DF <- data.frame(allmax30)
+max30DF %>%
+  filter(HSI_value > 0.5) %>%
+  nrow() # 134436
+# 134436/149562 0.8988647
 
 
 
