@@ -190,5 +190,6 @@ plet(allmax,
 #####################################
 #####################################
 
-
+## NOTE!!!!
+# must change all hist() to include maxcell = large number to get all values!
 
