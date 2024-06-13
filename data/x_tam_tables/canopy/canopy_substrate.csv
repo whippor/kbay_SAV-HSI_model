@@ -1,7 +1,7 @@
 substrate.class,substrate.class.SIV
 Land,0
-Mud,0.05
-Sand,0.05
+Mud,0
+Sand,0
 Cobble/Pebble,0.2
-Unclassified,0.5
+Unclassified,0.2
 Boulder,1

@@ -55,18 +55,26 @@ presence <- terra::rast("data/c_submodel_data/canopy_presence_HSI/presenceHSI.gr
 #####################################
 #####################################
 
-# create HSI setting any zero to zero and taking mean of bath and subs
-under_zero <- mean(substrate[["HSI_value"]], 
-                   bathymetry[["HSI_value"]])
+# create mean-value HSI for understorey (bathymetry, substrate)
+under_mean <- mean(substrate[["HSI_value"]], bathymetry[["HSI_value"]])
+
+# weighted mean HSI
+# under_mean <- c(substrate[["HSI_value"]], bathymetry[["HSI_value"]])
+# under_mean <- terra::weighted.mean(under_mean, c(2, 1))
+# names(under_mean) <- "HSI_value"
+
+# create HSI setting any zero to zero 
+under_zero <- under_mean
 sub_zero <- substrate
+sub_zero[sub_zero < 0.01] <- 0
 sub_zero[sub_zero > 0.01] <- 1
 bath_zero <- bathymetry
+bath_zero[bath_zero < 0.01] <- 0
 bath_zero[bath_zero > 0.01] <- 1
-pres_zero <- presence
-pres_zero[pres_zero > 0.01] <- 1
 near_zero <- under_zero[["HSI_value"]] *
   sub_zero[["HSI_value"]] *
   bath_zero[["HSI_value"]]
+
 # add presence as automatic "1" to raster
 presencemask <- presence < 0.99
 presence1 <- mask(presence, presencemask, maskvalue = 1)

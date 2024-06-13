@@ -35,6 +35,39 @@ bathymetry_canop <- terra::rast("data/b_intermediate_data/canopy_bathymetry/bath
 
 bathymetry_seagr <- terra::rast("data/b_intermediate_data/seagrass_bathymetry/bathymetry.grd")
 
+#####################################
+#####################################
+
+# canopy stats
+# mask out all HSI below -30 m, above 0 m
+bathmask <- clamp(bathymetry_canop, lower = -30, upper = 0, values = FALSE)
+canopy30 <- mask(canopy, 
+                      bathmask)
+plot(canopy30)
+plet(canopy30,
+     tiles = "Stadia.AlidadeSmooth",
+     main = "Canopy Kelp HSI")
+
+#canopy stats
+terra::expanse(canopy) # 946.16 km^2 (total bay)
+terra::hist(canopy)
+
+terra::expanse(canopy30) # 352.60 km^2 (above -30)
+terra::hist(canopy30, maxcell = 1100000)
+
+## proportion suitability 
+under_df <- data.frame(canopy30)
+under_df %>%
+  mutate(HSIround = round(HSI_value, digits = 2)) %>%
+  group_by(HSIround) %>%
+  summarise(n = n()) %>%
+  mutate(freq = n / sum(n))
+ggplot(under_df, aes(x=HSI_value)) +
+  geom_histogram(binwidth = 0.05) +
+  theme_bw()
+
+# printed frequencies
+as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05))))
 
 #####################################
 #####################################
@@ -43,15 +76,18 @@ bathymetry_seagr <- terra::rast("data/b_intermediate_data/seagrass_bathymetry/ba
 # mask out all HSI below -30 m, above 3 m
 bathmask <- clamp(bathymetry_under, lower = -30, upper = 3, values = FALSE)
 understorey30 <- mask(understorey, 
-                    bathmask)
+                      bathmask)
 plot(understorey30)
+plet(understorey30,
+     tiles = "Stadia.AlidadeSmooth",
+     main = "Understorey Kelp HSI")
 
 #understorey stats
 terra::expanse(understorey) # 946.16 km^2 (total bay)
-terra::hist(understorey)
+terra::hist(understorey, maxcell = 1100000)
 
 terra::expanse(understorey30) # 373.91 km^2 (above -30)
-terra::hist(understorey30)
+terra::hist(understorey30, maxcell = 1100000)
 
 ## proportion suitability 
 under_df <- data.frame(understorey30)
@@ -81,54 +117,25 @@ canopyDF %>%
 #####################################
 #####################################
 
-# canopy stats
-# mask out all HSI below -30 m, above 0 m
-bathmask <- clamp(bathymetry_canop, lower = -30, upper = 0, values = FALSE)
-canopy30 <- mask(canopy, 
-                      bathmask)
-plot(canopy30)
-
-#canopy stats
-terra::expanse(canopy) # 946.16 km^2 (total bay)
-terra::hist(canopy)
-
-terra::expanse(canopy30) # 352.60 km^2 (above -30)
-terra::hist(canopy30)
-
-## proportion suitability 
-under_df <- data.frame(canopy30)
-under_df %>%
-  mutate(HSIround = round(HSI_value, digits = 2)) %>%
-  group_by(HSIround) %>%
-  summarise(n = n()) %>%
-  mutate(freq = n / sum(n))
-ggplot(under_df, aes(x=HSI_value)) +
-  geom_histogram(binwidth = 0.05) +
-  theme_bw()
-
-# printed frequencies
-as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05))))
-
-
-#####################################
-#####################################
-
 #seagrass stats
-# mask out all HSI below -10 m, above 1 m
-bathmask <- clamp(bathymetry_seagr, lower = -10, upper = 1, values = FALSE)
-seagrass10 <- mask(seagrass, 
+# mask out all HSI below -7 m, above 3 m
+bathmask <- clamp(bathymetry_seagr, lower = -10, upper = 3, values = FALSE)
+seagrass3 <- mask(seagrass, 
                  bathmask)
-plot(seagrass10)
+plot(seagrass3)
+plet(seagrass3,
+     tiles = "Stadia.AlidadeSmooth",
+     main = "Seagrass HSI")
 
 #seagrass stats
 terra::expanse(seagrass) # 946.16 km^2 (total bay)
 terra::hist(seagrass)
 
-terra::expanse(seagrass10) # 184.46 km^2 (above -10)
-terra::hist(seagrass10)
+terra::expanse(seagrass3) # 184.46 km^2 (above -10)
+terra::hist(seagrass3, maxcell = 1100000)
 
 ## proportion suitability 
-under_df <- data.frame(seagrass10)
+under_df <- data.frame(seagrass3)
 under_df %>%
   mutate(HSIround = round(HSI_value, digits = 2)) %>%
   group_by(HSIround) %>%
@@ -150,13 +157,16 @@ bathmask <- clamp(bathymetry_under, lower = -30, upper = 3, values = FALSE)
 allmax30 <- mask(allmax, 
                    bathmask)
 plot(allmax30)
+plet(allmax30,
+     tiles = "Stadia.AlidadeSmooth",
+     main = "All SAV HSI")
 
 #combined stats
 terra::expanse(allmax) # 946.16 km^2 (total bay)
 terra::hist(allmax)
 
 terra::expanse(allmax30) # 373.91 km^2 (above -30)
-terra::hist(allmax30)
+terra::hist(allmax30, maxcell = 1100000)
 
 ## proportion suitability 
 under_df <- data.frame(allmax30)
