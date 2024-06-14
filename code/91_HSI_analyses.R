@@ -35,6 +35,8 @@ bathymetry_canop <- terra::rast("data/b_intermediate_data/canopy_bathymetry/bath
 
 bathymetry_seagr <- terra::rast("data/b_intermediate_data/seagrass_bathymetry/bathymetry.grd")
 
+presence <- terra::rast("data/c_submodel_data/seagrass_presence_HSI/presenceHSI.grd")
+
 #####################################
 #####################################
 
@@ -52,7 +54,7 @@ plet(canopy30,
 terra::expanse(canopy) # 946.16 km^2 (total bay)
 terra::hist(canopy)
 
-terra::expanse(canopy30) # 352.60 km^2 (above -30)
+terra::expanse(canopy30) # 352.59 km^2 (above -30)
 terra::hist(canopy30, maxcell = 1100000)
 
 ## proportion suitability 
@@ -67,7 +69,13 @@ ggplot(under_df, aes(x=HSI_value)) +
   theme_bw()
 
 # printed frequencies
-as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05))))
+cantab <- as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05),
+                                  include.lowest = TRUE)))
+# values between 0.10 - 0.65
+sum(cantab[3:13,2]) # 86356
+# total cells: 141036
+# proportion 
+# 86356/141036 # 0.612
 
 #####################################
 #####################################
@@ -100,7 +108,9 @@ ggplot(under_df, aes(x=HSI_value)) +
   geom_histogram(binwidth = 0.05) +
   theme_bw()
 
-as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05))))
+# printed frequencies
+undtab <- as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05),
+                                  include.lowest = TRUE)))
 
 # overlap of HSI = 1 understorey with canopy HSI = 1
 kelp_overlap <- c(canopy, understorey)
@@ -131,7 +141,7 @@ plet(seagrass3,
 terra::expanse(seagrass) # 946.16 km^2 (total bay)
 terra::hist(seagrass)
 
-terra::expanse(seagrass3) # 184.46 km^2 (above -10)
+terra::expanse(seagrass3) # 194.47 km^2 (3 to -10)
 terra::hist(seagrass3, maxcell = 1100000)
 
 ## proportion suitability 
@@ -145,9 +155,21 @@ ggplot(under_df, aes(x=HSI_value)) +
   geom_histogram(binwidth = 0.05) +
   theme_bw()
 
-as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05))))
+# printed frequencies
+seatab <- as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05),
+                                  include.lowest = TRUE)))
+# values between 0.25 - 0.75
+sum(seatab[6:15,2]) # 69207
+# total cells: 77789
+# proportion 
+# 69207/77789 # 0.889
+nonzero <- under_df %>%
+  filter(HSI_value != 0)
 
-4295/nrow(filter(test$HSI_value ==1))
+# HSI 1 contributions
+all1 <- data.frame(presence[presence == 1]) # 4295
+seag1 <- data.frame(seagrass3[seagrass3 == 1]) #4292
+# 4292/4295 # 0.9993
 
 #####################################
 #####################################
@@ -180,13 +202,20 @@ ggplot(under_df, aes(x=HSI_value)) +
   theme_bw()
 
 
-as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05))))
+# printed frequencies
+alltab <- as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05),
+                                  include.lowest = TRUE)))
+allbay <- data.frame(understorey)
+sum(alltab[2:20,2]) # 119611
+# 119611/149562 # 0.799
+# 119611/378464 # 0.3160
+
 
 max30DF <- data.frame(allmax30)
 max30DF %>%
   filter(HSI_value > 0.5) %>%
-  nrow() # 134436
-# 134436/149562 0.8988647
+  nrow() # 114522
+ 114522/149562 # 0.765
 
 
 
