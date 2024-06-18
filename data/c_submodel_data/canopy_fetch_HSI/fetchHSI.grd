@@ -5,8 +5,8 @@ nodatavalue=nan
 byteorder=little
 nbands=2
 bandorder=BIL
-minvalue=-107374184:-2.78124123718022616e+38
-maxvalue=2.72008302207532161e+23:3.16840708350193198e+38
+minvalue=-107374184:-3.36111837011006796e+38
+maxvalue=2.72008302207532161e+23:3.16840688067783594e+38
 categorical=FALSE
 [description]
 layername=lyr.1:HSI_value

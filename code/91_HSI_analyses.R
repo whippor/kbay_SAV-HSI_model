@@ -72,12 +72,14 @@ ggplot(under_df, aes(x=HSI_value)) +
 cantab <- as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05),
                                   include.lowest = TRUE)))
 # values between 0.10 - 0.65
-sum(cantab[5:16,2]) # 92528
+sum(cantab[3:18,2]) # 93420
 # total cells: 141036
 # proportion 
-# 92528/141036 # 0.656
+# 93420/141036 # 0.662
 allones <- under_df %>%
   filter(HSI_value == 1)
+
+# 16527 canopy HSI 1 from presence
 
 #####################################
 #####################################
