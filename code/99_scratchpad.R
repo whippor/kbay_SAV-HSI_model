@@ -38,113 +38,84 @@ plot(subsshallow)
 
 
 
+# spring Seldovia 5 and -1
+# neap Seldovia 3.5 and 1.5
 
+library(tidyverse)
+library(terra)
 
-
-
-
-
-
-
-########################
-### xx. Canopy Fetch ###
-########################
-
-# clear environment
-rm(list=setdiff(ls(), c("all_begin", "master_begin")))
-
-# calculate start time of code (determine how long it takes to complete all code)
-start <- Sys.time()
-
-#####################################
-#####################################
-
-# load packages
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,
-               terra, # is replacing the raster package
-               viridis,
-               fetchr)
-
-#####################################
-#####################################
-
-# set directories
-## define data directory (as this is an R Project, pathnames are simplified)
-### input directories
-data_dir <- "data/a_raw_data/bathymetry"
-
-### output directories
-#### Intermediate directories
-intermediate_dir <- "data/b_intermediate_data"
-
-#### bathymetry directory
-dir.create(paste0(intermediate_dir, "/",
-                  "roi"))
-
-#### bathymetry directory
-dir.create(paste0(intermediate_dir, "/",
-                  "understorey_bathymetry"))
-
-bathymetry_dir <- "data/b_intermediate_data/understorey_bathymetry"
-
-roi_dir <- "data/b_intermediate_data/roi"
-
-#####################################
-#####################################
-
-# set parameters
-
-## coordinate reference system
-### EPSG:3338 is NAD83 / Alaska Albers (https://epsg.io/3338)
 crs <- "EPSG:3338"
 
 # define vector for region of interest
-roi <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/LDA_2016.kml")
+roi <- terra::vect("C:/Users/Ross.Whippo/Desktop/jakolof_polygon.kml")
 roi <- project(roi, crs)
 
-# export roi
-terra::writeVector(roi, filename = file.path(roi_dir, "roi.shp"), overwrite = T)
+bathymetry <- terra::rast("C:/Users/Ross.Whippo/Desktop/Kachemak_bathymetry_8m.tif/Kachemak_bathymetry_8m.tif")
+bathymetry <- project(bathymetry, crs)
+bathymetry <- terra::rast("data/b_intermediate_data/understorey_bathymetry/bathymetry.grd")
+
+plot(bathymetry)
+bath_mask <- terra::mask(bathymetry, roi)
+plot(bath_mask)
+bath_clip <- terra::crop(bath_mask, roi)
+plot(bath_clip)
+
+# 5 to -1
+springhigh <- bath_mask
+springlow <- bath_mask
+springhigh[springhigh > 5] <- NA
+springhighdf <- data.frame(springhigh)
 
 
-#####################################
-#####################################
+springlow[springlow > -1] <- NA
+springlowdf <- data.frame(springlow)
+plot(springlow)
 
-# load data
-bathymetry <- terra::rast("~/git/kbay_SAV-HSI_model/data/a_raw_data/KBL-bathymetry_GWA-area_50m_EPSG3338.tiff")
+8.003082*8.003082 # 64.04932
+#springhigh
+64.04932*245509 # 15724685
+#springlow
+64.04932*237557 #15215364
 
-# inspect the data
-## coordinate reference system
-terra::crs(bathymetry) # EPSG:4269
+# 3.141259r^2 = 15724685
+15724685/3.14159 # 5005327
+sqrt(5005327) # 2237.259 m radius circle (high)
 
-units(bathymetry) <- "meters"
+15215364/3.14159 # 4843205
+sqrt(4843205) # 2200.728
 
-
-#####################################
-#####################################
-
-# create land/water raster from bathymetry data
-landwater <- bathymetry
-landwater[landwater > 0] <- 1
-landwater[landwater <= 0] <- NA
-terra::plot(landwater, col = c("#2e8b57", "#add8e6"))
-
-memory.size()
-fetch <- fetchr::get_fetch(
-  r           = landwater,     # binary land water raster
-  max_dist    = 100000,        # maximum distance to calculate fetch in meters (200km)
-  in_parallel = FALSE,          # run calculations in parallel
-  verbose     = TRUE
-)
-
+# truncated cone volume
+# V = (1/3) * pi * h (r^2 + r * R + R^2)
+# V = (1/3) * 3.14159 * 6 (2200.728^2 + 2200.728 * 2237.259 + 2237.728^2)
+3.14159*6 # 18.84954
+2200.728^2 # 4843204
+2237.728^2 #5007427
+2200.728*2237.259 # 4923599
+4843204+5007427+4923599 # 14774230
+14774230*18.84954 # 278487439
+278487439*(1/3) # 92829146
+# ~ 93 million cubic meters of water on a spring tide
 
 
+sum(abs(springhighdf)) * 64.04932 # 776373227
+sum(abs(springlowdf)) * 64.04932 # 776215528
+776373227 - 776215528
 
 
 
 
-# constrain bathymetry to roi
-bathy_roi <- terra::crop(bathymetry, roi)
+# 3.5 to 1.5
+neaphigh <- bath_mask
+neaplow <- bath_mask
+neaphigh[neaphigh > 3.5] <- NA
+neaphighdf <- data.frame(neaphigh)
 
-# plot new raster
-plot(bathy_roi, col = viridis(nrow(bathy_roi), begin = 0.3))
+neaplow[neaplow > 1.5] <- NA
+neaplowdf <- data.frame(neaplow)
+
+#neaphigh
+64.04932*245509 # 15724685
+#neaplow
+60.04932*245509 # 14742649
+
+# 3.141259r^2 = 15724685

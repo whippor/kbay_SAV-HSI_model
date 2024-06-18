@@ -72,10 +72,12 @@ ggplot(under_df, aes(x=HSI_value)) +
 cantab <- as.data.frame(table(cut(under_df$HSI_value,breaks=seq(0,1,by=0.05),
                                   include.lowest = TRUE)))
 # values between 0.10 - 0.65
-sum(cantab[3:13,2]) # 86356
+sum(cantab[5:16,2]) # 92528
 # total cells: 141036
 # proportion 
-# 86356/141036 # 0.612
+# 92528/141036 # 0.656
+allones <- under_df %>%
+  filter(HSI_value == 1)
 
 #####################################
 #####################################
