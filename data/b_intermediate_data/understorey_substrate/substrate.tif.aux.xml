@@ -1,10 +1,10 @@
 <PAMDataset>
   <PAMRasterBand band="1">
-    <Description>substrate</Description>
+    <Description>subclass</Description>
     <CategoryNames>
+      <Category>Bedrock</Category>
       <Category>Boulder</Category>
       <Category>Cobble/Pebble</Category>
-      <Category>Land</Category>
       <Category>Mud</Category>
       <Category>Sand</Category>
       <Category>Unclassified</Category>

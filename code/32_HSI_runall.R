@@ -25,9 +25,9 @@ pacman::p_load(tidyverse,
 
 # run scripts
 source("code/00_directory_creation.R")
-source("code/06_understorey_HSI_runall.R")
-source("code/18_canopy_HSI_runall.R")
-source("code/28_seagrass_HSI_runall.R")
+source("code/08_understorey_HSI_runall.R")
+source("code/111_canopy_HSI_runall.R")
+source("code/230_seagrass_HSI_runall.R")
 source("code/31_combined_HSI_model.R")
 
 #####################################

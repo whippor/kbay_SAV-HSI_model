@@ -56,9 +56,11 @@ bathymetry <- terra::rast("~/git/kbay_SAV-HSI_model/data/b_intermediate_data/can
 
 # load data
 substrate <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/Kachemak_Subtidal_Benthic_Habitats.SHP/Kachemak_Subtidal_Benthic_Habitats.shp")
+intertidal_segs <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/tidalbands_shore_information_translated/tidalbands_shore_information_translatedPolygon.shp")
 
 ## reproject into Alaska Albers
 subs_albers <- project(substrate, crs)
+segs_albers <- project(intertidal_segs, crs)
 
 ## reduce to fewer categories
 subs_df <- data.frame(subs_albers)
@@ -73,23 +75,39 @@ subs_df$substrate <- replace(subs_df$substrate,
                              "Unclassified")
 subs_albers[["substrate"]] <- subs_df$substrate
 
+segs_df <- data.frame(segs_albers)
+segs_df <- segs_df %>%
+  mutate(subclass = case_when(subclass == "Rubble" ~ "Boulder",
+                              subclass == "Cobble/Gravel" ~ "Cobble/Pebble",
+                              subclass == "Mud/Organic" ~ "Mud",
+                              is.na(subclass) ~ "Unclassified",
+                              .default = subclass))
+segs_albers[["subclass"]] <- segs_df$subclass
+
 ## make polygons into raster
 subs_rast <- rasterize(subs_albers, bathymetry, "substrate")
+
+segs_rast <- rasterize(segs_albers, bathymetry, "subclass")
 
 # inspect the data
 ## coordinate reference system
 terra::crs(subs_rast) # EPSG:3338
 cat(crs(subs_rast))
 
+terra::crs(segs_rast)
+cat(crs(segs_rast))
+
 ## resolution
 terra::res(subs_rast) # 50 50
+terra::res(segs_rast)
 
 #####################################
 #####################################
 
-# expand substrate raster to bathymetry layer
+# expand substrate rasters to bathymetry layer
 subs_expand <- terra::extend(subs_rast, bathymetry)
 varnames(subs_expand) <- "substrate"
+
 
 # fill empty space in raster with Unclassified
 unclass_rast <- rast(ncol = 1064,
@@ -104,14 +122,17 @@ values(unclass_rast) <- 5
 names(unclass_rast) <- "substrate"
 subs_final <- terra::merge(subs_expand, unclass_rast)
 
+# merge substrate with intertidal segment raster
+all_final <- terra::merge(segs_rast, subs_final)
+
 # plot new raster
-plot(subs_final, col = viridis(nrow(subs_final), begin = 0.3))
+plot(all_final, col = viridis(nrow(all_final)))
 
 #####################################
 #####################################
 
 # export raster file
-terra::writeRaster(subs_final, filename = file.path(substrate_dir, "substrate.tif"), overwrite = T)
+terra::writeRaster(all_final, filename = file.path(substrate_dir, "substrate.tif"), overwrite = T)
 
 #####################################
 #####################################

@@ -60,16 +60,16 @@ subs_mask <- mask(substrate, roi)
 # plot to check for correct values
 # plot(subs_mask, col = viridis(nrow(subs_mask)))
 
-# extract all values from subs roi
+# extract all values from subs mask
 vals1 <- data.frame(values(subs_mask))
 vals1 <- vals1 %>%
-  rename("value" = "substrate")
+  rename("value" = "subclass")
 
 # ASSIGN HSI VALUES TO EACH SUBSTRATE CLASS
 ## Check value <-> level associations
 subs_values <- data.frame(levels(subs_mask))
-### 0 Boulder
-### 1 Cobble/Pebble
+### 0 Bedrock
+### 1 BoulderCobble/Pebble
 ### 2 Land
 ### 3 Mud
 ### 4 Sand
