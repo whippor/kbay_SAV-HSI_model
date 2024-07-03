@@ -84,6 +84,7 @@ segs_df <- segs_df %>%
                               .default = subclass))
 segs_albers[["subclass"]] <- segs_df$subclass
 
+
 ## make polygons into raster
 subs_rast <- rasterize(subs_albers, bathymetry, "substrate")
 
@@ -122,17 +123,38 @@ values(unclass_rast) <- 5
 names(unclass_rast) <- "substrate"
 subs_final <- terra::merge(subs_expand, unclass_rast)
 
-# merge substrate with intertidal segment raster
-all_final <- terra::merge(segs_rast, subs_final)
+# merge substrate with intertidal segment raster and maintain land
+plot(subs_final)
 
-# plot new raster
-plot(all_final, col = viridis(nrow(all_final)))
+
+# fill empty space in raster with Unclassified
+names(unclass_rast) <- "subclass"
+segs_expanded <- terra::merge(segs_rast, unclass_rast)
+
+
+segs_df <- data.frame(segs_expanded)
+subs_df <- data.frame(subs_final)
+joined_df <- bind_cols(segs_df, subs_df)
+joined_df <- joined_df %>%
+  mutate(substrate = case_when(subclass == "Mud" ~ "Mud",
+                               subclass == "Sand" ~ "Sand",
+                               subclass == "Boulder" ~ "Boulder",
+                               subclass == "Cobble/Pebble" ~ "Cobble/Pebble",
+                               subclass == "Bedrock" ~ "Bedrock",
+                               .default = substrate))
+values(segs_rast) <- joined_df$substrate
+plot(segs_rast, plg=list( # parameters for drawing legend
+  title = "Substrate",
+  title.cex = 2, # Legend title size
+  cex = 2 # Legend text size
+))
+
 
 #####################################
 #####################################
 
 # export raster file
-terra::writeRaster(all_final, filename = file.path(substrate_dir, "substrate.tif"), overwrite = T)
+terra::writeRaster(segs_rast, filename = file.path(substrate_dir, "substrate.tif"), overwrite = T)
 
 #####################################
 #####################################

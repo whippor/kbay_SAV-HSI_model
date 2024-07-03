@@ -77,7 +77,7 @@ subs_values <- data.frame(levels(subs_mask))
 
 ## join tam and values tables
 tam_subs_new <- tam_subs %>%
-  rename("substrate" = "substrate.class")
+  rename("subclass" = "substrate.class")
 join_ID <- tam_subs_new %>%
   full_join(subs_values) 
 

@@ -47,7 +47,7 @@ canopy30 <- mask(canopy,
                       bathmask)
 plot(canopy30)
 plet(canopy30,
-     tiles = "Stadia.AlidadeSmooth",
+     #tiles = "Stadia.AlidadeSmooth",
      main = "Canopy Kelp HSI")
 
 #canopy stats
@@ -91,7 +91,7 @@ understorey30 <- mask(understorey,
                       bathmask)
 plot(understorey30)
 plet(understorey30,
-     tiles = "Stadia.AlidadeSmooth",
+     #tiles = "Stadia.AlidadeSmooth",
      main = "Understorey Kelp HSI")
 
 #understorey stats
@@ -138,7 +138,7 @@ seagrass3 <- mask(seagrass,
                  bathmask)
 plot(seagrass3)
 plet(seagrass3,
-     tiles = "Stadia.AlidadeSmooth",
+     #tiles = "Stadia.AlidadeSmooth",
      main = "Seagrass HSI")
 
 #seagrass stats
@@ -184,7 +184,7 @@ allmax30 <- mask(allmax,
                    bathmask)
 plot(allmax30)
 plet(allmax30,
-     tiles = "Stadia.AlidadeSmooth",
+     #tiles = "Stadia.AlidadeSmooth",
      main = "All SAV HSI")
 
 #combined stats

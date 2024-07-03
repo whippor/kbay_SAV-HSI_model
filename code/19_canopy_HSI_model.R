@@ -90,7 +90,8 @@ final_zero <- merge(presence1, near_zero)
 
 plot(final_zero, col = viridis(nrow(final_zero)))
 
-plet(final_zero,
+plet(final_zero, 
+     col = viridis(nrow(final_zero)),
      main = "Canopy Kelp HSI")
 
 #####################################
@@ -110,9 +111,3 @@ terra::writeRaster(final_zero,
 print(Sys.time() - start) # print how long it takes to calculate
 
 
-neardf <- data.frame(near_zero)
-notone <- neardf %>%
-  filter(HSI_value  == 1)
-finaldf <- data.frame(final_zero)
-allone <- finaldf %>%
-  filter(HSI_value == 1)

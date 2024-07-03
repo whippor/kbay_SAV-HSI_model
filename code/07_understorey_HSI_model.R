@@ -88,6 +88,7 @@ terra::plot(final_zero, col = viridis(nrow(final_zero)),
      main = "Bath 1, Subs 2")
 
 plet(final_zero,
+     col = viridis(nrow(final_zero)),
      main = "Understorey Kelp HSI")
 
 #####################################
@@ -106,8 +107,5 @@ terra::writeRaster(final_zero,
 # calculate end time and print time difference
 print(Sys.time() - start) # print how long it takes to calculate
 
-test <- bathymetry
-names(test) <- c("depth", "HSI_bath")
-under_mean <- c(substrate[["HSI_value"]], test[["HSI_bath"]])
-test
+
 

@@ -63,7 +63,7 @@ subs_mask <- mask(substrate, roi)
 # extract all values from subs roi
 vals1 <- data.frame(values(subs_mask))
 vals1 <- vals1 %>%
-  rename("value" = "substrate")
+  rename("value" = "subclass")
 
 # ASSIGN HSI VALUES TO EACH SUBSTRATE CLASS
 ## Check value <-> level associations
@@ -77,7 +77,7 @@ subs_values <- data.frame(levels(subs_mask))
 
 ## join tam and values tables
 tam_subs_new <- tam_subs %>%
-  rename("substrate" = "substrate.class")
+  rename("subclass" = "substrate.class")
 join_ID <- tam_subs_new %>%
   full_join(subs_values) 
 
@@ -91,7 +91,7 @@ subs_mask[["HSI_value"]] <- index_vals
 
 # check plot
 # check plot
-plot(subs_mask, col = viridis(nrow(subs_mask), begin = 0.3))
+plot(subs_mask, col = viridis(nrow(subs_mask)))
 
 #####################################
 #####################################

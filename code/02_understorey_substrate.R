@@ -143,17 +143,18 @@ joined_df <- joined_df %>%
                                subclass == "Bedrock" ~ "Bedrock",
                                .default = substrate))
 values(segs_rast) <- joined_df$substrate
-plot(segs_rast, label = TRUE)
-plot(subs_final, add = TRUE)
+plot(segs_rast, plg=list( # parameters for drawing legend
+                title = "Substrate",
+                title.cex = 2, # Legend title size
+                cex = 2 # Legend text size
+            ))
 
-plet(segs_rast)
 
-click()
 #####################################
 #####################################
 
 # export raster file
-terra::writeRaster(all_final, filename = file.path(substrate_dir, "substrate.tif"), overwrite = T)
+terra::writeRaster(segs_rast, filename = file.path(substrate_dir, "substrate.tif"), overwrite = T)
 
 #####################################
 #####################################

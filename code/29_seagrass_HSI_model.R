@@ -80,9 +80,10 @@ presencemask <- presence < 0.99
 presence1 <- mask(presence, presencemask, maskvalue = 1)
 final_zero <- merge(presence1, near_zero)
 
-plot(final_zero, col = viridis(nrow(final_zero), begin = 0.3))
+plot(final_zero, col = viridis(nrow(final_zero)))
 
 plet(final_zero,
+     col = viridis(nrow(final_zero)),
      main = "Seagrass HSI")
 
 #####################################
