@@ -15,7 +15,8 @@ rm(list = ls())
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse,
                terra, # is replacing the raster package
-               viridis)
+               viridis,
+               leaflet)
 
 #####################################
 #####################################
@@ -48,7 +49,7 @@ canopy30 <- mask(canopy,
 plot(canopy30)
 plet(canopy30,
      #tiles = "Stadia.AlidadeSmooth",
-     main = "Canopy Kelp HSI")
+     main = "Canopy Kelp HSI") 
 
 #canopy stats
 terra::expanse(canopy) # 946.16 km^2 (total bay)
