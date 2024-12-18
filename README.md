@@ -52,6 +52,8 @@ Once cloned, the code can by run piecemeal for each SAV group and parameter, or 
 
 Currently, the initial fetch calculation code is not operational due to an incompatibility between the fetchR package and the current version of R. However, the original fetch map has been placed in each relevant data directory. In this way the model can still be run for each type of SAV, but fetch will not be calculated locally.
 
+The gitignore file can be changed to ignore derived model data including .tifs if desired.
+
 ------------------------------------------------------------------------
 
 ## Methods
