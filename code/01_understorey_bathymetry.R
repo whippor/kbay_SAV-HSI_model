@@ -62,7 +62,7 @@ terra::writeVector(roi, filename = file.path(roi_dir, "roi.shp"), overwrite = T)
 #####################################
 
 # load data
-bathymetry <- terra::rast("~/git/kbay_SAV-HSI_model/data/a_raw_data/KBL-bathymetry_GWA-area_50m_EPSG3338.tiff")
+bathymetry <- terra::rast("data/a_raw_data/KBL-bathymetry_GWA-area_50m_EPSG3338.tiff")
 
 # inspect the data
 ## coordinate reference system

@@ -45,19 +45,19 @@ kelp_dir <- "data/b_intermediate_data/canopy_presence"
 crs <- "EPSG:3338"
 
 # define vector for region of interest
-roi <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/LDA_2016.kml")
+roi <- terra::vect("data/a_raw_data/LDA_2016.kml")
 roi <- project(roi, crs)
 
 # import bathymetry as base raster
-bathymetry <- terra::rast("~/git/kbay_SAV-HSI_model/data/b_intermediate_data/canopy_bathymetry/bathymetry.grd")
+bathymetry <- terra::rast("data/b_intermediate_data/canopy_bathymetry/bathymetry.grd")
 
 #####################################
 #####################################
 
 # load data
-kelp2000 <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/Kelp_presence/kelp2000_final.shp")
-kelp2001 <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/Kelp_presence/kelp2001_final.shp")
-kelp2002 <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/Kelp_presence/kelp2002_final.shp")
+kelp2000 <- terra::vect("data/a_raw_data/Kelp_presence/kelp2000_final.shp")
+kelp2001 <- terra::vect("data/a_raw_data/Kelp_presence/kelp2001_final.shp")
+kelp2002 <- terra::vect("data/a_raw_data/Kelp_presence/kelp2002_final.shp")
 
 ## reproject into Alaska Albers
 k00_albers <- project(kelp2000, crs)

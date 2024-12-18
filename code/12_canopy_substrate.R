@@ -45,18 +45,18 @@ substrate_dir <- "data/b_intermediate_data/canopy_substrate"
 crs <- "EPSG:3338"
 
 # define vector for region of interest
-roi <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/LDA_2016.kml")
+roi <- terra::vect("data/a_raw_data/LDA_2016.kml")
 roi <- project(roi, crs)
 
 # import bathymetry as base raster
-bathymetry <- terra::rast("~/git/kbay_SAV-HSI_model/data/b_intermediate_data/canopy_bathymetry/bathymetry.grd")
+bathymetry <- terra::rast("data/b_intermediate_data/canopy_bathymetry/bathymetry.grd")
 
 #####################################
 #####################################
 
 # load data
-substrate <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/Kachemak_Subtidal_Benthic_Habitats.SHP/Kachemak_Subtidal_Benthic_Habitats.shp")
-intertidal_segs <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/tidalbands_shore_information_translated/tidalbands_shore_information_translatedPolygon.shp")
+substrate <- terra::vect("data/a_raw_data/Kachemak_Subtidal_Benthic_Habitats.SHP/Kachemak_Subtidal_Benthic_Habitats.shp")
+intertidal_segs <- terra::vect("data/a_raw_data/tidalbands_shore_information_translated/tidalbands_shore_information_translatedPolygon.shp")
 
 ## reproject into Alaska Albers
 subs_albers <- project(substrate, crs)

@@ -51,7 +51,7 @@ roi_dir <- "data/b_intermediate_data/roi"
 crs <- "EPSG:3338"
 
 # define vector for region of interest
-roi <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/LDA_2016.kml")
+roi <- terra::vect("data/a_raw_data/LDA_2016.kml")
 roi <- project(roi, crs)
 
 # export roi
@@ -62,7 +62,7 @@ terra::writeVector(roi, filename = file.path(roi_dir, "roi.shp"), overwrite = T)
 #####################################
 
 # load data
-bathymetry <- terra::rast("~/git/kbay_SAV-HSI_model/data/a_raw_data/KBL-bathymetry_GWA-area_50m_EPSG3338.tiff")
+bathymetry <- terra::rast("data/a_raw_data/KBL-bathymetry_GWA-area_50m_EPSG3338.tiff")
 
 # inspect the data
 ## coordinate reference system

@@ -28,10 +28,12 @@ source("code/21_seagrass_bathymetry.R")
 source("code/22_seagrass_substrate.R")
 # source("code/23_seagrass_fetch.R")
 source("code/24_seagrass_presence.R")
+source("code/24_x1_seagrass_velocity.R")
 source("code/25_seagrass_bathymetry_submodel.R")
 source("code/26_seagrass_substrate_submodel.R")
 source("code/27_seagrass_fetch_submodel.R")
 source("code/28_seagrass_presence_submodel.R")
+source("code/28_x1_seagrass_velocity_submodel.R")
 source("code/29_seagrass_HSI_model.R")
 
 

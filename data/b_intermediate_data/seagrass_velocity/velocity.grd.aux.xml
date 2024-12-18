@@ -1,0 +1,11 @@
+<PAMDataset>
+  <PAMRasterBand band="1">
+    <Description>maxSpeed_CIOFS500</Description>
+    <Metadata>
+      <MDI key="STATISTICS_MINIMUM">3.0640039767604e-06</MDI>
+      <MDI key="STATISTICS_MAXIMUM">3.5614633560181</MDI>
+      <MDI key="STATISTICS_MEAN">-9999</MDI>
+      <MDI key="STATISTICS_STDDEV">-9999</MDI>
+    </Metadata>
+  </PAMRasterBand>
+</PAMDataset>

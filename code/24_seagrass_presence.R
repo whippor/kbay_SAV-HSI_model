@@ -45,17 +45,17 @@ seagrass_dir <- "data/b_intermediate_data/seagrass_presence"
 crs <- "EPSG:3338"
 
 # define vector for region of interest
-roi <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/LDA_2016.kml")
+roi <- terra::vect("data/a_raw_data/LDA_2016.kml")
 roi <- project(roi, crs)
 
 # import bathymetry as base raster
-bathymetry <- terra::rast("~/git/kbay_SAV-HSI_model/data/b_intermediate_data/canopy_bathymetry/bathymetry.grd")
+bathymetry <- terra::rast("data/b_intermediate_data/canopy_bathymetry/bathymetry.grd")
 
 #####################################
 #####################################
 
 # load data
-seagrass <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/Seagrass_presence/KBAY_seagrass.shp")
+seagrass <- terra::vect("data/a_raw_data/Seagrass_presence/KBAY_seagrass.shp")
 
 ## reproject into Alaska Albers
 seagrass_albers <- project(seagrass, crs)

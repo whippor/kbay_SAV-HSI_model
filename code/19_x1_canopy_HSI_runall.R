@@ -30,10 +30,12 @@ source("code/11_canopy_bathymetry.R")
 source("code/12_canopy_substrate.R")
 # source("code/13_canopy_fetch.R")
 source("code/14_canopy_presence.R")
+source("code/14_x1_canopy_velocity.R")
 source("code/15_canopy_bathymetry_submodel.R")
 source("code/16_canopy_substrate_submodel.R")
 source("code/17_canopy_fetch_submodel.R")
 source("code/18_canopy_presence_submodel.R")
+source("code/18_x1_canopy_velocity_submodel.R")
 source("code/19_canopy_HSI_model.R")
 
 

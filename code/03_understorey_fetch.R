@@ -2,6 +2,8 @@
 ### 03. Understorey Fetch ###
 #############################
 
+######### NOT WORKING
+
 # clear environment
 rm(list=setdiff(ls(), c("all_begin", "master_begin")))
 
@@ -13,10 +15,12 @@ start <- Sys.time()
 
 # load packages
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,
+pacman::p_load(devtools,
+               tidyverse,
                terra, # is replacing the raster package
-               viridis,
-               fetchr)
+               viridis)
+install_version("rgdal", version = "1.6.7", repos = "http://cran.us.r-project.org")
+install_github("blasee/fetchR")
 
 #####################################
 #####################################
@@ -52,7 +56,7 @@ roi_dir <- "data/b_intermediate_data/roi"
 crs <- "EPSG:3338"
 
 # define vector for region of interest
-roi <- terra::vect("~/git/kbay_SAV-HSI_model/data/a_raw_data/LDA_2016.kml")
+roi <- terra::vect("data/a_raw_data/LDA_2016.kml")
 roi <- project(roi, crs)
 
 # export roi
@@ -63,7 +67,7 @@ terra::writeVector(roi, filename = file.path(roi_dir, "roi.shp"), overwrite = T)
 #####################################
 
 # load data
-bathymetry <- terra::rast("~/git/kbay_SAV-HSI_model/data/a_raw_data/KBL-bathymetry_GWA-area_50m_EPSG3338.tiff")
+bathymetry <- terra::rast("data/a_raw_data/KBL-bathymetry_GWA-area_50m_EPSG3338.tiff")
 
 # inspect the data
 ## coordinate reference system
@@ -85,7 +89,7 @@ terra::plot(landwater, col = c("#2e8b57", "#add8e6"))
 
 # run fetchr on entire bathymetry (takes ~4.5 hours)
 start <- Sys.time()
-fetch <- fetchr::get_fetch(
+fetch <- fetchR::get_fetch(
   r           = landwater,     # binary land water raster
   max_dist    = 200000,        # maximum distance to calculate fetch in meters (200km)
   in_parallel = FALSE

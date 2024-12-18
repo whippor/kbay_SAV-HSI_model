@@ -28,8 +28,10 @@ source("code/01_understorey_bathymetry.R")
 source("code/02_understorey_substrate.R")
 # source("code/03_understorey_fetch.R")
 source("code/04_understorey_bathymetry_submodel.R")
+source("code/04_x1_understorey_velocity.R")
 source("code/05_understorey_substrate_submodel.R")
 source("code/06_understorey_fetch_submodel.R")
+source("code/06_x1_understorey_velocity_submodel.R")
 source("code/07_understorey_HSI_model.R")
 
 

@@ -1,6 +1,6 @@
-#####################################
-### 07. Understorey HSI submodel ####
-#####################################
+##################################
+### 07. Understorey HSI model ####
+##################################
 
 # clear environment
 rm(list=setdiff(ls(), c("all_begin", "master_begin")))
@@ -52,6 +52,10 @@ bathymetry <- terra::rast("data/c_submodel_data/understorey_bathymetry_HSI/bathy
 
 fetch <- terra::rast("data/c_submodel_data/understorey_fetch_HSI/fetchHSI.grd")
 
+velocity <- terra::rast("data/c_submodel_data/understorey_velocity_HSI/velocityHSI.grd")
+# match extent of velocity raster to the others
+ext(velocity) <- ext(bathymetry)
+
 #####################################
 #####################################
 
@@ -61,7 +65,8 @@ fetch <- terra::rast("data/c_submodel_data/understorey_fetch_HSI/fetchHSI.grd")
 # create mean-value HSI for understorey (bathymetry, substrate)
 under_mean <- mean(substrate[["HSI_value"]], 
                    bathymetry[["HSI_value"]],
-                   fetch[["HSI_value"]])
+                   fetch[["HSI_value"]],
+                   velocity[["HSI_value"]])
 
 # weighted mean HSI
 # under_mean <- c(substrate[["HSI_value"]], bathymetry[["HSI_value"]])
@@ -79,10 +84,14 @@ bath_zero[bath_zero > 0.01] <- 1
 fetch_zero <- fetch
 fetch_zero[fetch_zero < 0.01] <- 0
 fetch_zero[fetch_zero > 0.01] <- 1
+velo_zero <- velocity
+velo_zero[velo_zero < 0.01] <- 0
+velo_zero[velo_zero > 0.01] <- 1
 final_zero <- under_zero[["HSI_value"]] *
   sub_zero[["HSI_value"]] *
   bath_zero[["HSI_value"]] *
-  fetch_zero[["HSI_value"]]
+  fetch_zero[["HSI_value"]] *
+  velo_zero[["HSI_value"]]
 
 terra::plot(final_zero, col = viridis(nrow(final_zero)),
      main = "Bath 1, Subs 2")
