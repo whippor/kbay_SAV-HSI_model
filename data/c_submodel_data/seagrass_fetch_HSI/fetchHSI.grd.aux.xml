@@ -2,18 +2,18 @@
   <PAMRasterBand band="1">
     <Description>lyr.1</Description>
     <Metadata>
-      <MDI key="STATISTICS_MINIMUM">0.050000000745058</MDI>
       <MDI key="STATISTICS_MAXIMUM">54.599998474121</MDI>
       <MDI key="STATISTICS_MEAN">-9999</MDI>
+      <MDI key="STATISTICS_MINIMUM">0.050000000745058</MDI>
       <MDI key="STATISTICS_STDDEV">-9999</MDI>
     </Metadata>
   </PAMRasterBand>
   <PAMRasterBand band="2">
     <Description>HSI_value</Description>
     <Metadata>
-      <MDI key="STATISTICS_MINIMUM">0</MDI>
       <MDI key="STATISTICS_MAXIMUM">1</MDI>
       <MDI key="STATISTICS_MEAN">-9999</MDI>
+      <MDI key="STATISTICS_MINIMUM">0</MDI>
       <MDI key="STATISTICS_STDDEV">-9999</MDI>
     </Metadata>
   </PAMRasterBand>

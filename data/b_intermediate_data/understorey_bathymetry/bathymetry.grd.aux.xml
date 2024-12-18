@@ -2,9 +2,9 @@
   <PAMRasterBand band="1">
     <Description>KBL-bathymetry_GWA-area_50m_EPSG3338</Description>
     <Metadata>
-      <MDI key="STATISTICS_MINIMUM">-174.82881164551</MDI>
       <MDI key="STATISTICS_MAXIMUM">1407.9375</MDI>
       <MDI key="STATISTICS_MEAN">-9999</MDI>
+      <MDI key="STATISTICS_MINIMUM">-174.82881164551</MDI>
       <MDI key="STATISTICS_STDDEV">-9999</MDI>
     </Metadata>
   </PAMRasterBand>
