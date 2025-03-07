@@ -1,6 +1,6 @@
-##################################
-### 07. Understorey HSI model ####
-##################################
+###################################
+### 121. Understorey HSI model ####
+###################################
 
 # clear environment
 rm(list=setdiff(ls(), c("all_begin", "master_begin")))
@@ -21,26 +21,11 @@ pacman::p_load(tidyverse,
 #####################################
 
 # set directories
-## define data directory (as this is an R Project, pathnames are simplified)
-### roi directory
-roi_dir <- "data/b_intermediate_data/roi"
 
 ### output directories
 #### submodel directory
 dir.create("data/d_suitability_data/understorey_HSI")
 submodel_dir <- "data/d_suitability_data/understorey_HSI"
-
-#####################################
-#####################################
-
-# set parameters
-
-## coordinate reference system
-### EPSG:3338 is NAD83 / Alaska Albers (https://epsg.io/3338)
-crs <- "EPSG:3338"
-
-# define vector for region of interest
-roi <- terra::vect(roi_dir)
 
 #####################################
 #####################################
@@ -52,9 +37,9 @@ bathymetry <- terra::rast("data/c_submodel_data/understorey_bathymetry_HSI/bathy
 
 fetch <- terra::rast("data/c_submodel_data/understorey_fetch_HSI/fetchHSI.grd")
 
-velocity <- terra::rast("data/c_submodel_data/understorey_velocity_HSI/velocityHSI.grd")
+# velocity <- terra::rast("data/c_submodel_data/understorey_velocity_HSI/velocityHSI.grd")
 # match extent of velocity raster to the others
-ext(velocity) <- ext(bathymetry)
+# ext(velocity) <- ext(bathymetry)
 
 #####################################
 #####################################
@@ -65,8 +50,9 @@ ext(velocity) <- ext(bathymetry)
 # create mean-value HSI for understorey (bathymetry, substrate)
 under_mean <- mean(substrate[["HSI_value"]], 
                    bathymetry[["HSI_value"]],
-                   fetch[["HSI_value"]],
-                   velocity[["HSI_value"]])
+                   fetch[["HSI_value"]]
+                  # , velocity[["HSI_value"]]
+                   )
 
 # weighted mean HSI
 # under_mean <- c(substrate[["HSI_value"]], bathymetry[["HSI_value"]])
@@ -84,14 +70,14 @@ bath_zero[bath_zero > 0.01] <- 1
 fetch_zero <- fetch
 fetch_zero[fetch_zero < 0.01] <- 0
 fetch_zero[fetch_zero > 0.01] <- 1
-velo_zero <- velocity
-velo_zero[velo_zero < 0.01] <- 0
-velo_zero[velo_zero > 0.01] <- 1
+#velo_zero <- velocity
+#velo_zero[velo_zero < 0.01] <- 0
+#velo_zero[velo_zero > 0.01] <- 1
 final_zero <- under_zero[["HSI_value"]] *
   sub_zero[["HSI_value"]] *
   bath_zero[["HSI_value"]] *
-  fetch_zero[["HSI_value"]] *
-  velo_zero[["HSI_value"]]
+  fetch_zero[["HSI_value"]] 
+# * velo_zero[["HSI_value"]]
 
 terra::plot(final_zero, col = viridis(nrow(final_zero)),
      main = "Bath 1, Subs 2")

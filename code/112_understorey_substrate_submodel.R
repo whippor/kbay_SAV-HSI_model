@@ -1,5 +1,5 @@
 ###########################################
-### 05. Understorey Substrate submodel ####
+### 112. Understorey Substrate submodel ###
 ###########################################
 
 # clear environment
@@ -35,10 +35,6 @@ submodel_dir <- "data/c_submodel_data/understorey_substrate_HSI"
 
 # set parameters
 
-## coordinate reference system
-### EPSG:3338 is NAD83 / Alaska Albers (https://epsg.io/3338)
-crs <- "EPSG:3338"
-
 # define vector for region of interest
 roi <- terra::vect(roi_dir)
 
@@ -46,7 +42,7 @@ roi <- terra::vect(roi_dir)
 #####################################
 
 # load data
-substrate <- terra::rast("data/b_intermediate_data/understorey_substrate/substrate.tif")
+substrate <- terra::rast("data/b_intermediate_data/substrate/substrate.tif")
 
 tam_subs <- read_csv("data/x_tam_tables/understorey/understorey_substrate.csv")
 
@@ -98,7 +94,7 @@ plot(subs_mask, col = viridis(nrow(subs_mask), begin = 0.3))
 
 # Export data
 ## Suitability
-terra::writeRaster(subs_mask, 
+terra::writeRaster(subs_mask["HSI_value"],
                    filename = file.path(submodel_dir, "substrateHSI.grd"), 
                    overwrite = T)
 

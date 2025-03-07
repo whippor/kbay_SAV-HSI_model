@@ -1,6 +1,6 @@
-##################################
-### 04_x1 Understorey Velocity ###
-##################################
+#####################
+### 004. Velocity ###
+#####################
 
 # clear environment
 rm(list=setdiff(ls(), c("all_begin", "master_begin")))
@@ -31,9 +31,9 @@ intermediate_dir <- "data/b_intermediate_data"
 
 #### velocity directory
 dir.create(paste0(intermediate_dir, "/",
-                  "understorey_velocity"))
+                  "velocity"))
 
-velocity_dir <- "data/b_intermediate_data/understorey_velocity"
+velocity_dir <- "data/b_intermediate_data/velocity"
 
 roi_dir <- "data/b_intermediate_data/roi"
 
@@ -50,10 +50,6 @@ crs <- "EPSG:3338"
 # define vector for region of interest
 roi <- terra::vect("data/a_raw_data/LDA_2016.kml")
 roi <- project(roi, crs)
-
-# export roi
-terra::writeVector(roi, filename = file.path(roi_dir, "roi.shp"), overwrite = T)
-
 
 #####################################
 #####################################

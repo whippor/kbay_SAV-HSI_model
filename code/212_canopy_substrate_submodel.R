@@ -1,5 +1,5 @@
 ######################################
-### 16. Canopy Substrate submodel ####
+### 212. Canopy Substrate submodel ###
 ######################################
 
 # clear environment
@@ -35,10 +35,6 @@ submodel_dir <- "data/c_submodel_data/canopy_substrate_HSI"
 
 # set parameters
 
-## coordinate reference system
-### EPSG:3338 is NAD83 / Alaska Albers (https://epsg.io/3338)
-crs <- "EPSG:3338"
-
 # define vector for region of interest
 roi <- terra::vect(roi_dir)
 
@@ -46,7 +42,7 @@ roi <- terra::vect(roi_dir)
 #####################################
 
 # load data
-substrate <- terra::rast("data/b_intermediate_data/canopy_substrate/substrate.tif")
+substrate <- terra::rast("data/b_intermediate_data/substrate/substrate.tif")
 
 tam_subs <- read_csv("data/x_tam_tables/canopy/canopy_substrate.csv")
 

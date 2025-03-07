@@ -1,5 +1,5 @@
 #######################################
-### 28. Seagrass Presence submodel ####
+### 316. Seagrass Presence submodel ###
 #######################################
 
 # clear environment
@@ -35,10 +35,6 @@ submodel_dir <- "data/c_submodel_data/seagrass_presence_HSI"
 
 # set parameters
 
-## coordinate reference system
-### EPSG:3338 is NAD83 / Alaska Albers (https://epsg.io/3338)
-crs <- "EPSG:3338"
-
 # define vector for region of interest
 roi <- terra::vect(roi_dir)
 
@@ -46,7 +42,7 @@ roi <- terra::vect(roi_dir)
 #####################################
 
 # load data
-presence <- terra::rast("data/b_intermediate_data/seagrass_presence/presence.tif")
+presence <- terra::rast("data/b_intermediate_data/presence/seagrass_presence.tif")
 
 #####################################
 #####################################

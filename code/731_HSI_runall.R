@@ -3,6 +3,7 @@
 #######################
 
 # reproducibility
+# renv::snapshot()
 renv::restore()
 
 # clear environment
@@ -24,11 +25,16 @@ pacman::p_load(tidyverse,
 #####################################
 
 # run scripts
-source("code/00_directory_creation.R")
-source("code/08_understorey_HSI_runall.R")
-source("code/19_x1_canopy_HSI_runall.R")
-source("code/29_x1_seagrass_HSI_runall.R")
-source("code/31_combined_HSI_model.R")
+source("code/001_bathymetry.R")
+source("code/002_substrate.R")
+# source("code/003_fetch.R")
+# source("code/004_velocity.R")
+source("code/005_canopy_presence.R")
+source("code/006_seagrass_presence.R")
+source("code/131_understorey_HSI_runall.R")
+source("code/231_canopy_HSI_runall.R")
+source("code/331_seagrass_HSI_runall.R")
+source("code/721_combined_HSI_model.R")
 
 #####################################
 #####################################

@@ -1,8 +1,9 @@
-###################################
-### 08. Understorey HSI run all ###
-###################################
+####################################
+### 131. Understorey HSI run all ###
+####################################
 
 # reproducibility
+# renv::snapshot()
 renv::restore()
 
 # clear environment
@@ -24,19 +25,22 @@ pacman::p_load(tidyverse,
 #####################################
 
 # run scripts
-source("code/01_understorey_bathymetry.R")
-source("code/02_understorey_substrate.R")
-# source("code/03_understorey_fetch.R")
-source("code/04_understorey_bathymetry_submodel.R")
-source("code/04_x1_understorey_velocity.R")
-source("code/05_understorey_substrate_submodel.R")
-source("code/06_understorey_fetch_submodel.R")
-source("code/06_x1_understorey_velocity_submodel.R")
-source("code/07_understorey_HSI_model.R")
+source("code/001_bathymetry.R")
+source("code/002_substrate.R")
+# source("code/003_fetch.R")
+source("code/004_velocity.R")
+source("code/111_understorey_bathymetry_submodel.R")
+source("code/112_understorey_substrate_submodel.R")
+source("code/113_understorey_fetch_submodel.R")
+# source("code/114_understorey_velocity_submodel.R")
+source("code/121_understorey_HSI_model.R")
 
 
 plot(final_zero, col = viridis(nrow(final_zero), begin = 0.3))
 
+plet(final_zero, 
+     col = viridis(nrow(final_zero)),
+     main = "Understorey Kelp HSI")
 
 #####################################
 #####################################

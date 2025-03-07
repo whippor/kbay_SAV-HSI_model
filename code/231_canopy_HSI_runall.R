@@ -1,10 +1,9 @@
-################################
-### 19x1. Canopy HSI run all ###
-################################
-
-# RUNS ALL BUT FETCH
+###############################
+### 231. Canopy HSI run all ###
+###############################
 
 # reproducibility
+# renv::snapshot()
 renv::restore()
 
 # clear environment
@@ -26,17 +25,17 @@ pacman::p_load(tidyverse,
 #####################################
 
 # run scripts
-source("code/11_canopy_bathymetry.R")
-source("code/12_canopy_substrate.R")
-# source("code/13_canopy_fetch.R")
-source("code/14_canopy_presence.R")
-source("code/14_x1_canopy_velocity.R")
-source("code/15_canopy_bathymetry_submodel.R")
-source("code/16_canopy_substrate_submodel.R")
-source("code/17_canopy_fetch_submodel.R")
-source("code/18_canopy_presence_submodel.R")
-source("code/18_x1_canopy_velocity_submodel.R")
-source("code/19_canopy_HSI_model.R")
+source("code/001_bathymetry.R")
+source("code/002_substrate.R")
+# source("code/003_fetch.R")
+source("code/004_velocity.R")
+source("code/005_canopy_presence.R")
+source("code/211_canopy_bathymetry_submodel.R")
+source("code/212_canopy_substrate_submodel.R")
+source("code/213_canopy_fetch_submodel.R")
+# source("code/214_canopy_velocity_submodel.R")
+source("code/215_canopy_presence_submodel.R")
+source("code/221_canopy_HSI_model.R")
 
 
 plot(final_zero, col = viridis(nrow(final_zero)))

@@ -1,9 +1,6 @@
-########################
-### 31. HSI combined ###
-########################
-
-# reproducibility
-renv::restore()
+#########################
+### 721. HSI combined ###
+#########################
 
 # clear environment
 rm(list = setdiff(ls(), "master_begin"))
@@ -24,7 +21,6 @@ pacman::p_load(tidyverse,
 #####################################
 
 # set directories
-## define data directory (as this is an R Project, pathnames are simplified)
 
 ### output directories
 #### final directory

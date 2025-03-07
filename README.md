@@ -12,7 +12,7 @@ This is a repository under active development to model habitat suitability indic
 
 -   Create a validated habitat suitability index model for major SAV categories in Kachemak Bay.
 
--   Provide publicly available data to identify critical SAV types and locations.
+-   Provide publicly available data to identify critical SAV types and potential locations.
 
 ### Guiding Questions
 
@@ -24,7 +24,7 @@ This is a repository under active development to model habitat suitability indic
 
 This project is in active development and will change as additional datasets and analyses are included. The primary short-term goals for the project include:
 
--   Streamline the code volume by reducing duplicated files created for each SAV type to a single reference file (initial code architecture was highly redundant to allow modularity of component SAV parts).
+-   ~~Streamline the code volume by reducing duplicated files created for each SAV type to a single reference file (initial code architecture was highly redundant to allow modularity of component SAV parts).~~ Completed: 2025/03/06
 
 -   Identify additional environmental parameters and datasets relevant to habitat suitability, especially oceanographic parameters including temperature, salinity, and nutrients.
 
@@ -38,17 +38,30 @@ This project is in active development and will change as additional datasets and
 
 ------------------------------------------------------------------------
 
-Once cloned, the code can by run piecemeal for each SAV group and parameter, or the combined HSI model for each SAV type can be run with the **\*HSI_model.R** code. Or you can run all data prep and models using the **\*HSI_runall.R** code blocks for each SAV. The HSI model for all SAV combined can be run with **31_combined_HSI_model.R.** Alternatively, you can run all the models and submodels using the **32_HSI_runall.R** code block.
+Once cloned, the code can by run piecemeal for each SAV group and parameter, or the combined HSI model for each SAV type can be run with the **\*\_HSI_model.R** code. Or you can run all data prep and models using the **\*\_HSI_runall.R** code blocks for each SAV. The HSI model for all SAV combined can be run with **721_combined_HSI_model.R.** Alternatively, you can run all the models and submodels using the **731_HSI_runall.R** code block.
 
-| File Prefix | Content                                     |
-|-------------|---------------------------------------------|
-| 0\*         | directory creation, understorey kelp models |
-| 1\*         | canopy kelp models                          |
-| 2\*         | seagrass models                             |
-| 3\*         | combined SAV models                         |
-| 9\*         | additional analyses, scratchpad             |
+| File Name Prefix Value | Content                                     |
+|------------------------|---------------------------------------------|
+| 000                    | functions required for the analysis         |
+| 00\*                   | base layer import, prep, and/or calculation |
+| 1\*\*                  | understorey kelp code components            |
+| 2\*\*                  | canopy kelp code components                 |
+| 3\*\*                  | seagrass code components                    |
+| 7\*\*                  | multi-model execution                       |
+| 888                    | additional analysis and summary             |
+| 999                    | scratch pad                                 |
+| \*1\*                  | submodel                                    |
+| \*2\*                  | SAV-specific HSI model                      |
+| \*31                   | "run all" execution                         |
+| \*11                   | bathymetry submodel                         |
+| \*12                   | substrate submodel                          |
+| \*13                   | fetch submodel                              |
+| \*14                   | velocity submodel                           |
+| \*15                   | canopy presence submodel                    |
+| \*16                   | seagrass presence submodel                  |
+| \*21                   | SAV-specific HSI model                      |
 
-: Code type by naming prefix convention.
+: Code type by naming convention.
 
 Currently, the initial fetch calculation code is not operational due to an incompatibility between the fetchR package and the current version of R. However, the original fetch map has been placed in each relevant data directory. In this way the model can still be run for each type of SAV, but fetch will not be calculated locally.
 
@@ -103,7 +116,7 @@ Carrillo, C., S.K. McKay, and T.S. Swannack. 2020. Ecological Model Development:
 ### TAM References
 
 | SAV              | Parameter   | Citation                                                                                                                                                                                                                                                                   |
-|------------------|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------|---------|-----------------------------------------------------|
 | canopy kelp      | depth       | Springer YP, Hays CG, Carr MH, Mackey MR. Toward ecosystem-based management of marine macroalgae—The bull kelp, *Nereocystis luetkeana*. Oceanography and marine biology. 2010 May 12;48:1.                                                                                |
 | canopy kelp      | substrate   | Dayton PK. Ecology of kelp communities. Annual review of ecology and systematics. 1985 Jan 1:215-45.                                                                                                                                                                       |
 | canopy kelp      | fetch       | Smale DA, Burrows MT, Evans AJ, King N, Sayer MD, Yunnie AL, Moore PJ. Linking environmental variables with regional-scale variability in ecological structure and standing stock of carbon within UK kelp forests. Marine Ecology Progress Series. 2016 Jan 19;542:79-95. |

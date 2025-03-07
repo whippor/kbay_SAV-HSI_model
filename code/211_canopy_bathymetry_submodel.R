@@ -1,6 +1,6 @@
-######################################
-### 15. Canopy Bathymetry submodel ###
-######################################
+#######################################
+### 211. Canopy Bathymetry submodel ###
+#######################################
 
 # clear environment
 rm(list=setdiff(ls(), c("all_begin", "master_begin")))
@@ -16,6 +16,7 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse,
                terra, # is replacing the raster package
                viridis)
+source("code/000_function_interpolate_y.R")
 
 #####################################
 #####################################
@@ -35,10 +36,6 @@ submodel_dir <- "data/c_submodel_data/canopy_bathymetry_HSI"
 
 # set parameters
 
-## coordinate reference system
-### EPSG:3338 is NAD83 / Alaska Albers (https://epsg.io/3338)
-crs <- "EPSG:3338"
-
 # define vector for region of interest
 roi <- terra::vect(roi_dir)
 
@@ -46,7 +43,7 @@ roi <- terra::vect(roi_dir)
 #####################################
 
 # load data
-bathymetry <- terra::rast("data/b_intermediate_data/canopy_bathymetry/bathymetry.grd")
+bathymetry <- terra::rast("data/b_intermediate_data/bathymetry/bathymetry.grd")
 
 tam_bath <- read_csv("data/x_tam_tables/canopy/canopy_depth.csv")
 tam_bath <- tam_bath %>%
@@ -67,42 +64,14 @@ vals1 <- data.frame(values(bath_mask))
 ## Calculate slopes
 slopes <- diff(tam_bath$depth.m.SIV) / diff(tam_bath$depth.m)
 
-## Function to interpolate y value for given x values
-interpolate_y <- function(x_values) {
-  ### Initialize an empty vector for interpolated y values
-  interpolated_y_values <- numeric(length(x_values))
-  
-  for (i in seq_along(x_values)) {
-    x_value <- x_values[i]
-    
-    #### Check if x_value is outside the range of tam_bath$x
-    if (x_value < min(tam_bath$depth.m) || 
-        x_value > max(tam_bath$depth.m) || 
-        is.na(x_value) == TRUE ) {
-      interpolated_y_values[i] <- 0  # Set interpolated y value to zero
-    } else {
-      ##### Find the interval where x_value lies
-      idx <- findInterval(x_value, tam_bath$depth.m)
-      
-      ##### Linear interpolation
-      y1 <- tam_bath$depth.m.SIV[idx]
-      y2 <- tam_bath$depth.m.SIV[idx + 1]
-      slope <- slopes[idx]
-      interpolated_y_values[i] <- y1 + slope * (x_value - tam_bath$depth.m[idx])
-    }
-  }
-  
-  return(interpolated_y_values)
-}
-
 # calculate index from raster values with function
-index_vals <- interpolate_y(vals1$KBL.bathymetry_GWA.area_50m_EPSG3338)
+index_vals <- interpolate_y(vals1$KBL.bathymetry_GWA.area_50m_EPSG3338, tam_bath)
 
 # join HSI values with raster
 bath_mask[["HSI_value"]] <- index_vals
 
 # check plot
-plot(bath_mask, col = viridis(nrow(bath_mask), begin = 0.3))
+plot(bath_mask, col = viridis(nrow(bath_mask), begin = 0.3))  
 
 #####################################
 #####################################

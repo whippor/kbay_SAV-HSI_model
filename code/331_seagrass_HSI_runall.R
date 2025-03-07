@@ -1,8 +1,9 @@
 #################################
-### 230. Seagrass HSI run all ###
+### 331. Seagrass HSI run all ###
 #################################
 
 # reproducibility
+# renv::snapshot()
 renv::restore()
 
 # clear environment
@@ -24,17 +25,17 @@ pacman::p_load(tidyverse,
 #####################################
 
 # run scripts
-source("code/21_seagrass_bathymetry.R")
-source("code/22_seagrass_substrate.R")
-# source("code/23_seagrass_fetch.R")
-source("code/24_seagrass_presence.R")
-source("code/24_x1_seagrass_velocity.R")
-source("code/25_seagrass_bathymetry_submodel.R")
-source("code/26_seagrass_substrate_submodel.R")
-source("code/27_seagrass_fetch_submodel.R")
-source("code/28_seagrass_presence_submodel.R")
-source("code/28_x1_seagrass_velocity_submodel.R")
-source("code/29_seagrass_HSI_model.R")
+source("code/001_bathymetry.R")
+source("code/002_substrate.R")
+# source("code/003_fetch.R")
+source("code/004_velocity.R")
+source("code/006_seagrass_presence.R")
+source("code/311_seagrass_bathymetry_submodel.R")
+source("code/312_seagrass_substrate_submodel.R")
+source("code/313_seagrass_fetch_submodel.R")
+# source("code/314_seagrass_velocity_submodel.R")
+source("code/316_seagrass_presence_submodel.R")
+source("code/321_seagrass_HSI_model.R")
 
 
 plot(final_zero, col = viridis(nrow(final_zero)))
