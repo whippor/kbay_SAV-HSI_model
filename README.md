@@ -26,7 +26,7 @@ This is a repository under active development to model habitat suitability indic
 
 This project is in active development and will change as additional datasets and analyses are included. The primary short-term goals for the project include:
 
--   ~~Streamline the code volume by reducing duplicated files created for each SAV type to a single reference file (initial code architecture was highly redundant to allow modularity of component SAV parts).~~ Completed: 2025/03/06
+-   ~~Streamline the code volume by reducing duplicated files created for each SAV type to a single reference file (initial code architecture was highly redundant to allow modularity of component SAV parts).~~ **Completed: 2025/03/06**
 
 -   Identify additional environmental parameters and datasets relevant to habitat suitability, especially oceanographic parameters including temperature, salinity, and nutrients.
 
@@ -118,7 +118,7 @@ Carrillo, C., S.K. McKay, and T.S. Swannack. 2020. Ecological Model Development:
 ### TAM References
 
 | SAV              | Parameter   | Citation                                                                                                                                                                                                                                                                   |
-|---------|---------|-----------------------------------------------------|
+|-------------|-------------|-----------------------------------------------|
 | canopy kelp      | depth       | Springer YP, Hays CG, Carr MH, Mackey MR. Toward ecosystem-based management of marine macroalgae—The bull kelp, *Nereocystis luetkeana*. Oceanography and marine biology. 2010 May 12;48:1.                                                                                |
 | canopy kelp      | substrate   | Dayton PK. Ecology of kelp communities. Annual review of ecology and systematics. 1985 Jan 1:215-45.                                                                                                                                                                       |
 | canopy kelp      | fetch       | Smale DA, Burrows MT, Evans AJ, King N, Sayer MD, Yunnie AL, Moore PJ. Linking environmental variables with regional-scale variability in ecological structure and standing stock of carbon within UK kelp forests. Marine Ecology Progress Series. 2016 Jan 19;542:79-95. |

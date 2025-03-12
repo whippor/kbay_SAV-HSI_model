@@ -50,11 +50,16 @@ presence <- terra::rast("data/c_submodel_data/canopy_presence_HSI/presenceHSI.gr
 #####################################
 
 # create mean-value HSI for canopy (bathymetry, substrate, fetch)
-under_mean <- mean(substrate[["HSI_value"]], 
-                   bathymetry[["HSI_value"]],
-                   fetch[["HSI_value"]]
-                   # , velocity[["HSI_value"]]
-)
+# under_mean <- mean(substrate[["HSI_value"]], 
+#                    bathymetry[["HSI_value"]],
+#                    fetch[["HSI_value"]]
+#                    # , velocity[["HSI_value"]]
+# )
+
+# create geometric mean-value HSI for canopy (bathymetry, substrate, fetch)
+under_mean <- exp(mean(log(c((substrate[["HSI_value"]] + 1), 
+                             (bathymetry[["HSI_value"]] + 1),
+                             (fetch[["HSI_value"]] + 1)))))
 
 # weighted mean HSI
 # under_mean <- c(substrate[["HSI_value"]], bathymetry[["HSI_value"]])
@@ -62,7 +67,8 @@ under_mean <- mean(substrate[["HSI_value"]],
 # names(under_mean) <- "HSI_value"
 
 # create HSI setting any zero to zero 
-under_zero <- under_mean
+# under_zero <- under_mean # for arithmetic
+under_zero <- (under_mean - 1) # for geometric
 sub_zero <- substrate
 sub_zero[sub_zero < 0.01] <- 0
 sub_zero[sub_zero > 0.01] <- 1
@@ -75,7 +81,7 @@ fetch_zero[fetch_zero > 0.01] <- 1
 #velo_zero <- velocity
 #velo_zero[velo_zero < 0.01] <- 0
 #velo_zero[velo_zero > 0.01] <- 1
-near_zero <- under_zero[["HSI_value"]] *
+near_zero <- under_zero[['mean']] *
   sub_zero[["HSI_value"]] *
   bath_zero[["HSI_value"]] *
   fetch_zero[["HSI_value"]] 

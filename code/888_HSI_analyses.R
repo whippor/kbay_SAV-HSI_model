@@ -237,3 +237,67 @@ plet(allmax,
 ## NOTE!!!!
 # must change all hist() to include maxcell = large number to get all values!
 
+
+############### HIST of diff between arithmetic and geometric means for understorey
+
+# load data
+substrate <- terra::rast("data/c_submodel_data/understorey_substrate_HSI/substrateHSI.grd")
+
+bathymetry <- terra::rast("data/c_submodel_data/understorey_bathymetry_HSI/bathymetryHSI.grd")
+
+fetch <- terra::rast("data/c_submodel_data/understorey_fetch_HSI/fetchHSI.grd")
+
+
+
+# create arithmetic mean-value HSI for understorey (bathymetry, substrate, fetch)
+under_mean <- mean(substrate[["HSI_value"]], 
+                   bathymetry[["HSI_value"]],
+                   fetch[["HSI_value"]]
+                   # , velocity[["HSI_value"]]
+)
+
+
+# create geometric mean-value HSI for understorey (bathymetry, substrate, fetch)
+under_mean <- exp(mean(log(c((substrate[["HSI_value"]] + 1), 
+                             (bathymetry[["HSI_value"]] + 1),
+                             (fetch[["HSI_value"]] + 1)))))
+
+
+
+mean_plot <- data.frame(under_mean)
+ggplot(mean_plot, aes(x=`HSI_value`)) +
+  geom_histogram(binwidth = 0.05) +
+  ggtitle("Arithmetic") +
+  theme_bw() 
+
+
+zero_plot <- data.frame(under_zero)
+ggplot(zero_plot, aes(x=`mean`)) +
+  geom_histogram(binwidth = 0.05) +
+  ggtitle("Geometric") +
+  theme_bw()
+
+final_plot <- data.frame(final_zero)
+ggplot(final_plot, aes(x=`mean`)) +
+  geom_histogram(binwidth = 0.05) +
+  ggtitle("Geometric, final") +
+  theme_bw()
+
+
+# create HSI setting any zero to zero 
+under_zero <- (under_mean - 1) 
+sub_zero <- substrate
+sub_zero[sub_zero < 0.01] <- 0
+sub_zero[sub_zero > 0.01] <- 1
+bath_zero <- bathymetry
+bath_zero[bath_zero < 0.01] <- 0
+bath_zero[bath_zero > 0.01] <- 1
+fetch_zero <- fetch
+fetch_zero[fetch_zero < 0.01] <- 0
+fetch_zero[fetch_zero > 0.01] <- 1
+final_zero <- under_zero[['mean']] *
+  sub_zero[["HSI_value"]] *
+  bath_zero[["HSI_value"]] *
+  fetch_zero[["HSI_value"]] 
+
+
