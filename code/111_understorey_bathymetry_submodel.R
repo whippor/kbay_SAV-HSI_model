@@ -56,7 +56,7 @@ tam_bath <- tam_bath %>%
 # mask bathymetry to the roi
 bath_mask <- mask(bathymetry, roi)
 
-# extract all values from bath_roi
+# extract all values from bath_mask
 vals1 <- data.frame(values(bath_mask))
 
 ## Calculate slopes

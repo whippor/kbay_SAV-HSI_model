@@ -198,11 +198,11 @@ terra::hist(allmax30, maxcell = 1100000)
 ## proportion suitability 
 under_df <- data.frame(allmax30)
 under_df %>%
-  mutate(HSIround = round(HSI_value, digits = 2)) %>%
+  mutate(HSIround = round(`mean`, digits = 2)) %>%
   group_by(HSIround) %>%
   summarise(n = n()) %>%
   mutate(freq = n / sum(n))
-ggplot(under_df, aes(x=HSI_value)) +
+ggplot(under_df, aes(x=`mean`)) +
   geom_histogram(binwidth = 0.05) +
   theme_bw()
 

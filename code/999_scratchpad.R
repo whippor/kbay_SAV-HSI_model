@@ -119,3 +119,63 @@ neaplowdf <- data.frame(neaplow)
 60.04932*245509 # 14742649
 
 # 3.141259r^2 = 15724685
+
+
+
+
+
+
+
+
+
+
+# UA STUFF
+
+
+interpolate_y(vals_bath, under_tam_bath)
+
+
+
+
+
+## Function to interpolate y value for given x values
+interpolate_y <- function(x_values, tam_table) {
+  ### Initialize an empty vector for interpolated y values
+  interpolated_y_values <- numeric(length(x_values))
+  
+  for (i in seq_along(x_values)) {
+    x_value <- x_values[i]
+    
+    #### Check if x_value is outside the range of tam_table$x
+    ifelse(x_value < min(as.numeric(unlist(tam_table[,1]))), 0, x_value)  
+    ifelse(x_value > max(as.numeric(unlist(tam_table[,1]))), 0, x_value)  
+    ifelse(is.na(x_value) == TRUE, 0, x_value) 
+    # Set interpolated y value to zero
+    
+    ##### Find the interval where x_value lies
+    idx <- findInterval(x_value, as.numeric(unlist(tam_table[,1])))
+    
+    ##### Linear interpolation
+    y1 <- as.numeric(unlist(tam_table[,2]))[idx]
+    y2 <- as.numeric(unlist(tam_table[,2]))[idx + 1]
+    slope <- slopes[idx]
+    interpolated_y_values[i] <- y1 + slope * (x_value - as.numeric(unlist(tam_table[,1]))[idx])
+  }
+  return(interpolated_y_values)
+}
+
+
+
+for (j in seq_along(soboldf[1])) {
+  x_value <- soboldf[j, 1]
+  
+  
+}
+
+
+
+
+
+colnames(x)[z]
+colnames(x[[1]])[1]
+
