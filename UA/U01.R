@@ -101,7 +101,7 @@ vals_fetch <- vals_fetch %>%
 
 
 x_values <- c(vals_bath, vals_fetch) # for testing function
-x <- list(under_tam_bath, under_tam_fetch) # for testing function
+tam_table <- list(under_tam_bath, under_tam_fetch) # for testing function
 samples = 10000
 sobol_order = "first"
 #####################################
@@ -111,17 +111,26 @@ sobol_order = "first"
 # from adjusted TAM tables
 
 ## Function 
-sobol_interpolate_y <- function(x_values,
-                                tam_table...,
-                                samples,
+sobol_interpolate_y <- function(x_values, 
+                                tam_table, 
+                                samples = 10,
                                 sobol_order = "first") {
-  # name parameters
-  x_values <- data.frame(x_values)
-  x <- list(tam_table...)
+  # output list 
+  output_list <<- list()
   
+  # name parameters
+  all_list <- x_values
+  
+  
+  for (i in 1:length(all_list)) {
+    assign(paste("x", i, sep = "_"), all_list[[i]])
+  }
+  
+
+  x <- tam_table
   
   # check that there is a tam table for each input
-  if (length(x_values) == length(x)) {
+  if (length(all_list) == length(x)) {
     # add adjusted SIV values to TAM tables
     x <- map(x, \(x) rename(x, "SIV" = contains("SIV")))
     for (i in seq_along(x)) {
@@ -134,45 +143,50 @@ sobol_interpolate_y <- function(x_values,
     }
     
     # create sobol sequence for x values
-    z <- length(x)
+    z <- length(all_list)
     
     
     for (i in 1:z) {
       N <- samples
-      params <- paste(unlist(colnames(x[[i]][1])), "sobol", sep = "_")
+      df <- paste("x", i, sep = "_")
+      params <- paste0(names(x[[i]][1]), sep = "_", "sobol")
       mat <- sobol_matrices(N = N,
                             params = params,
-                            order = sobol_order)
-      mat[, 1] <- qunif(mat[, 1], min(unlist(x_values[i])), max(unlist(x_values[i])))
+                            order = sobol_order,
+                            type = "R")
+      mat[, 1] <- qunif(mat[, 1], min(get(df)), max(get(df)))
       
       soboldf <- data.frame(mat, matrix(NA, nrow = length(mat), ncol = 1))
-      soboldf <- rename(soboldf, !!paste(unlist(colnames(x[[i]][1])), "newSIV", sep = "_") := 2)
+      soboldf <- rename(soboldf, !!paste(names(x[[i]][1]), "newSIV", sep = "_") := 2)
       
       for (j in 1:nrow(soboldf)) {
         x_value <- soboldf[j, 1]
         
         #### Check if x_value is outside the range of tam_table$x
-        ifelse(x_value < min(as.numeric(unlist(x[[1]][1]))), 0, x_value)
-        ifelse(x_value > max(as.numeric(unlist(x[[1]][1]))), 0, x_value)
+        ifelse(x_value < min(as.numeric(unlist(x[[i]][1]))), 0, x_value)
+        ifelse(x_value > max(as.numeric(unlist(x[[i]][1]))), 0, x_value)
         ifelse(is.na(x_value) == TRUE, 0, x_value)
         # Set interpolated y value to zero
         
         ##### Find the interval where x_value lies
-        idx <- findInterval(x_value, as.numeric(unlist(x[[1]][1])))
+        idx <- findInterval(x_value, as.numeric(unlist(x[[i]][1])))
         ##### Find slopes
-        slopes <- diff(x[[1]]$TAM_adj) / diff(unlist(x[[1]][1]))
+        slopes <- diff(x[[i]]$TAM_adj) / diff(unlist(x[[i]][1]))
         
         ##### Linear interpolation
-        y1 <- as.numeric(unlist(x[[1]]$TAM_adj))[idx]
-        y2 <- as.numeric(unlist(x[[1]]$TAM_adj))[idx + 1]
+        y1 <- as.numeric(unlist(x[[i]]$TAM_adj))[idx]
+        y2 <- as.numeric(unlist(x[[i]]$TAM_adj))[idx + 1]
         slope <- slopes[idx]
-        soboldf[j, 2] <- y1 + slope * (x_value - as.numeric(unlist(x[[1]][1]))[idx])
+        soboldf[j, 2] <- y1 + slope * (x_value - as.numeric(unlist(x[[i]][1]))[idx])
         
       }
       
+      output_list[[paste(unlist(colnames(x[[i]][1])))]] <<- list(soboldf)
+     # assign(paste(unlist(colnames(x[[i]][1])), i, "sobol_df", sep = "_"), value = soboldf)
+      
     }
     
-    assign(paste(unlist(colnames(x[[i]][1])), "sobol_df", sep = "_"), value = soboldf)
+    
     
   } else {
     
@@ -182,6 +196,10 @@ sobol_interpolate_y <- function(x_values,
   
 }
 
+
+sobol_interpolate_y(c(vals_bath, vals_fetch), list(under_tam_bath, under_tam_fetch), 10)
+output2 <- output_list
+output3 <- output_list
 
 n <- max(length(vals_bath$depth), length(vals_fetch$fetch))
 length(vals_bath$depth) <- n                      
