@@ -343,6 +343,192 @@ for (i in 1:nrow(mat)) {
 
 
 
+for (i in 1:z) {
+  df <- paste("x", i, sep = "_")
+  N <- length(get(df))
+  params <- paste0(names(x[[i]][1]), sep = "_", "sobol")
+  mat <- sobol_matrices(N = N/3,
+                        params = params,
+                        order = sobol_order,
+                        type = "R")
+  mat[, 1] <- qunif(mat[, 1], min(get(df)), max(get(df)))
+  
+  soboldf <- data.frame(mat, matrix(NA, nrow = length(mat), ncol = 1))
+  soboldf <- rename(soboldf, !!paste(names(x[[i]][1]), "newSIV", sep = "_") := 2)
+  sobol_vec_x <- as.vector(soboldf[,1])
+  sobol_vec_SIV <- c()
+  min_x <- min(as.numeric(unlist(x[[i]][1])))
+  max_x <- max(as.numeric(unlist(x[[i]][1])))
+  ##### Find slopes
+  slopes <- diff(x[[i]]$TAM_adj) / diff(unlist(x[[i]][1]))
+  
+  for (j in 1:length(sobol_vec_x)) {
+    x_value <- sobol_vec_x[j]
+    
+    #### Check if x_value is outside the range of tam_table$x
+    ifelse(x_value < min_x, 0, x_value)
+    ifelse(x_value > max_x, 0, x_value)
+    ifelse(is.na(x_value) == TRUE, 0, x_value)
+    # Set interpolated y value to zero
+    
+    ##### Find the interval where x_value lies
+    idx <- findInterval(x_value, as.numeric(unlist(x[[i]][1])))
+    
+    ##### Linear interpolation
+    y1 <- as.numeric(unlist(x[[i]]$TAM_adj))[idx]
+    y2 <- as.numeric(unlist(x[[i]]$TAM_adj))[idx + 1]
+    slope <- slopes[idx]
+    sobol_vec_SIV <- c(sobol_vec_SIV, y1 + slope * (x_value - as.numeric(unlist(x[[i]][1]))[idx]))
+    
+  }
+  
+  soboldf[,2] <- sobol_vec_SIV
+  output_list[[paste(unlist(colnames(x[[i]][1])))]] <- list(soboldf)
+
+  }
+
+
+
+library(sensobol)
+library(dplyr)
+library(purrr)
+
+x_values <- c(vals_bath, vals_fetch) # for testing function
+tam_table <- list(under_tam_bath, under_tam_fetch) # for testing function
+sobol_order = "first"
+  
+###
+N = 10000
+params = c("depth", "fetch")
+perm = 2
+
+MC_SIV <- c()
+
+for (k in 1:perm) {
+
+SIV_set <- c()
+
+for (i in 1:length(params)) {
+  
+  x <- tam_table
+  
+  # add adjusted SIV values to TAM tables
+  x <- map(x, \(x) rename(x, "SIV" = contains("SIV")))
+  for (m in seq_along(x)) {
+    x[[m]]$unif_rand <- runif(nrow(x[[m]]), min = -0.2, max = 0.2)
+    x[[m]]$TAM_adj <- x[[m]]$SIV + x[[m]]$unif_rand
+    x[[m]]$TAM_adj[1] <- x[[m]]$SIV[1]
+    x[[m]]$TAM_adj[length(x[[m]]$TAM_adj)] <- x[[m]]$SIV[length(x[[m]]$SIV)]
+    x[[m]]$TAM_adj <- ifelse(x[[m]]$TAM_adj > 1, 1, x[[m]]$TAM_adj)
+    x[[m]]$TAM_adj <- ifelse(x[[m]]$TAM_adj < 0, 0, x[[m]]$TAM_adj)
+  }
+
+mat <- sobol_matrices(N = N, params = params, order = sobol_order)
+mat[,1] <- qunif(mat[,1], -30, 3)
+mat[,2] <- qunif(mat[,2], 0.01, 50)
+
+##### Find slopes
+slopes <- diff(x[[i]]$TAM_adj) / diff(unlist(x[[i]][1]))
+
+min_x <- min(as.numeric(unlist(x[[i]][1])))
+max_x <- max(as.numeric(unlist(x[[i]][1])))
+
+sobol_vec_SIV <- c()
+
+for (j in 1:nrow(mat)) {
+  x_value <- mat[j,i]
+  
+  #### Check if x_value is outside the range of tam_table$x
+  ifelse(x_value < min_x, 0, x_value)
+  ifelse(x_value > max_x, 0, x_value)
+  ifelse(is.na(x_value) == TRUE, 0, x_value)
+  # Set interpolated y value to zero
+  
+  ##### Find the interval where x_value lies
+  idx <- findInterval(x_value, as.numeric(unlist(x[[i]][1])))
+  
+  ##### Linear interpolation
+  y1 <- as.numeric(unlist(x[[i]]$TAM_adj))[idx]
+  y2 <- as.numeric(unlist(x[[i]]$TAM_adj))[idx + 1]
+  slope <- slopes[idx]
+  sobol_vec_SIV <- c(sobol_vec_SIV, y1 + slope * (x_value - as.numeric(unlist(x[[i]][1]))[idx]))
+  
+}
+
+SIV_set[[paste(unlist(colnames(x[[i]][1])), "SIV", sep = "_")]] <- sobol_vec_SIV
+
+}
+
+MC_SIV[[paste("run", k, sep = "_")]] <- SIV_set
+
+rm(SIV_set)
+
+}
+###
+
+
+
+
+
+
+
+for (i in 1:ncol(mat)) {
+  
+  N <- length(get(df))
+  params <- paste0(names(x[[i]][1]), sep = "_", "sobol")
+#  mat <- sobol_matrices(N = N/3,
+#                        params = params,
+#                        order = sobol_order,
+#                        type = "R")
+#  mat[, 1] <- qunif(mat[, 1], min(get(df)), max(get(df)))
+  
+  soboldf <- data.frame(mat, matrix(NA, nrow = length(mat), ncol = 1))
+  soboldf <- rename(soboldf, !!paste(names(x[[i]][1]), "newSIV", sep = "_") := 2)
+  sobol_vec_x <- as.vector(soboldf[,1])
+  sobol_vec_SIV <- c()
+  min_x <- min(as.numeric(unlist(x[[i]][1])))
+  max_x <- max(as.numeric(unlist(x[[i]][1])))
+  ##### Find slopes
+  slopes <- diff(x[[i]]$TAM_adj) / diff(unlist(x[[i]][1]))
+  
+  for (j in 1:length(mat)) {
+    x_value <- mat[i,j]
+    
+    #### Check if x_value is outside the range of tam_table$x
+    ifelse(x_value < min_x, 0, x_value)
+    ifelse(x_value > max_x, 0, x_value)
+    ifelse(is.na(x_value) == TRUE, 0, x_value)
+    # Set interpolated y value to zero
+    
+    ##### Find the interval where x_value lies
+    idx <- findInterval(x_value, as.numeric(unlist(x[[i]][1])))
+    
+    ##### Linear interpolation
+    y1 <- as.numeric(unlist(x[[i]]$TAM_adj))[idx]
+    y2 <- as.numeric(unlist(x[[i]]$TAM_adj))[idx + 1]
+    slope <- slopes[idx]
+    sobol_vec_SIV <- c(sobol_vec_SIV, y1 + slope * (x_value - as.numeric(unlist(x[[i]][1]))[idx]))
+    
+  }
+  
+  soboldf[,2] <- sobol_vec_SIV
+  output_list[[paste(unlist(colnames(x[[i]][1])))]] <- list(soboldf)
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -115,6 +115,9 @@ sobol_interpolate_y <- function(x_values,
                                 tam_table, 
                                 samples = 10,
                                 sobol_order = "first") {
+  require(purrr)
+  require(dplyr)
+  require(sensobol)
   # output list 
   output_list <<- list()
   
@@ -147,10 +150,10 @@ sobol_interpolate_y <- function(x_values,
     
     
     for (i in 1:z) {
-      N <- samples
       df <- paste("x", i, sep = "_")
+      N <- length(get(df))
       params <- paste0(names(x[[i]][1]), sep = "_", "sobol")
-      mat <- sobol_matrices(N = N,
+      mat <- sobol_matrices(N = N/3,
                             params = params,
                             order = sobol_order,
                             type = "R")
@@ -158,31 +161,35 @@ sobol_interpolate_y <- function(x_values,
       
       soboldf <- data.frame(mat, matrix(NA, nrow = length(mat), ncol = 1))
       soboldf <- rename(soboldf, !!paste(names(x[[i]][1]), "newSIV", sep = "_") := 2)
+      sobol_vec_x <- as.vector(soboldf[,1])
+      sobol_vec_SIV <- c()
+      min_x <- min(as.numeric(unlist(x[[i]][1])))
+      max_x <- max(as.numeric(unlist(x[[i]][1])))
+      ##### Find slopes
+      slopes <- diff(x[[i]]$TAM_adj) / diff(unlist(x[[i]][1]))
       
-      for (j in 1:nrow(soboldf)) {
-        x_value <- soboldf[j, 1]
+      for (j in 1:length(sobol_vec_x)) {
+        x_value <- sobol_vec_x[j]
         
         #### Check if x_value is outside the range of tam_table$x
-        ifelse(x_value < min(as.numeric(unlist(x[[i]][1]))), 0, x_value)
-        ifelse(x_value > max(as.numeric(unlist(x[[i]][1]))), 0, x_value)
+        ifelse(x_value < min_x, 0, x_value)
+        ifelse(x_value > max_x, 0, x_value)
         ifelse(is.na(x_value) == TRUE, 0, x_value)
         # Set interpolated y value to zero
         
         ##### Find the interval where x_value lies
         idx <- findInterval(x_value, as.numeric(unlist(x[[i]][1])))
-        ##### Find slopes
-        slopes <- diff(x[[i]]$TAM_adj) / diff(unlist(x[[i]][1]))
         
         ##### Linear interpolation
         y1 <- as.numeric(unlist(x[[i]]$TAM_adj))[idx]
         y2 <- as.numeric(unlist(x[[i]]$TAM_adj))[idx + 1]
         slope <- slopes[idx]
-        soboldf[j, 2] <- y1 + slope * (x_value - as.numeric(unlist(x[[i]][1]))[idx])
+        sobol_vec_SIV <- c(sobol_vec_SIV, y1 + slope * (x_value - as.numeric(unlist(x[[i]][1]))[idx]))
         
       }
       
-      output_list[[paste(unlist(colnames(x[[i]][1])))]] <<- list(soboldf)
-     # assign(paste(unlist(colnames(x[[i]][1])), i, "sobol_df", sep = "_"), value = soboldf)
+      soboldf[,2] <- sobol_vec_SIV
+      output_list[[paste(unlist(colnames(x[[i]][1])))]] <- list(soboldf)
       
     }
     
