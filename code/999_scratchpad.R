@@ -521,6 +521,211 @@ for (i in 1:ncol(mat)) {
 
 
 
+############
+
+############
+
+# SENSOBOL VIGNETTE PRACTICE
+
+library(sensobol)
+library(data.table)
+library(ggplot2)
+
+N <- 2^10
+k <- 8
+params <- paste("$x_", 1:k, "$", sep = "")
+R <- 10^3
+type <- "norm"
+conf <- 0.95
+
+mat <- sobol_matrices(N=N, params=params)
+
+y <- sobol_Fun(mat)
+
+plot_uncertainty(Y=y, N=N) + labs(y = "Counts", x = "$y$")
+
+plot_scatter(data = mat, N = N, Y=y, params = params)
+
+plot_multiscatter(data = mat, N=N, Y=y, params = paste("$x_", 1:4, "$", sep = ""))
+
+ind <- sobol_indices(Y=y, N=N, params=params, boot=TRUE, R=R, type = type, conf = conf)
+
+cols <- colnames(ind$results) [1:5]
+
+ind$results[, (cols):= round(.SD,3), .SDcols = (cols)]
+
+ind
+
+ind.dummy <- sobol_dummy(Y=y, N=N, params=params, boot=TRUE, R=R)
+
+plot(ind,dummy = ind.dummy)
+
+
+
+
+
+
+# USING  THE SENSOBOL PACKAGE TO TEST SINGLE AND GLOBAL MODEL SENSITIVITY OF A 
+# POPULATION GROWTH MODEL
+
+N <- 2^13
+params <- c("$r$", "$K$", "$N_0$")
+matrices <- c("A", "B", "AB", "BA")
+first <- total <- "azzini"
+order <- "second"
+R <- 10^3
+type <- "percent"
+conf <- 0.95
+
+
+# population growth function (analagous to my TAM equations)
+population_growth <- function(r, K, X0) {
+  X <- X0
+  for (i in 0:20) {
+    X <- X + r * X * (1 - X / K)
+  }
+  return(X)
+}
+
+# runs the function in a rowwise fashion (to match layout of the matrix)
+population_growth_run <- function (dt) {
+  return(mapply(population_growth, dt[, 1], dt[, 2], dt[, 3]))
+}
+
+mat <- sobol_matrices(matrices = matrices, N = N, params = params, order = order, type = "LHS")
+
+
+mat[, "$r$"] <- qnorm(mat[, "$r$"], 1.7, 0.3)
+mat[, "$K$"] <- qnorm(mat[, "$K$"], 40, 1)
+mat[, "$N_0$"] <- qunif(mat[, "$N_0$"], 10, 50)
+
+
+Y <- population_growth_run(mat)
+
+plot_uncertainty(Y = Y, N = N) + 
+  labs(y = "Counts", x = "$y$")
+
+quantile(Y, probs = c(0.01, 0.025, 0.5, 0.975, 0.99, 1))
+
+plot_scatter(data = mat, N = N, Y = Y, params = params, method = "bin")
+
+plot_multiscatter(data = mat, N = N, Y = Y, params = params, smpl = 2^11) +
+  geom_point(size = 3)
+
+ind <- sobol_indices(matrices = matrices, Y = Y, N = N, params = params, first = first, total = total, order = order, boot = TRUE, R = R, parallel = "no", type = type, conf = conf)
+
+cols <- colnames(ind$results)[1:5]
+ind$results[, (cols):= round(.SD, 3), .SDcols = (cols)] 
+ind
+
+ind.dummy<-sobol_dummy(Y=Y,N=N,params=params,boot=TRUE,R=R)
+
+plot(ind, dummy = ind.dummy)
+
+plot(ind, order = "second")
+
+
+
+
+######### FOUND THE BEST FIT DISTRIBUTION FOR DEPTH TO PUT INTO UNCERTAINTY ANALYSIS ABOVE
+
+library(fGarch)
+library(fitdistrplus)
+depth_norm <- fitdist(vals_bath$depth, "norm")
+depth_unif <- fitdist(vals_bath$depth, "unif")
+depth_snorm <- fitdist(vals_bath$depth, "snorm", start  = list(mean = -10,
+                                                              sd = 8,
+                                                              xi = 1.5))
+
+hist(rsnorm(1000, -10, 8, -1.5))
+
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+denscomp(list(depth_norm, depth_unif, depth_snorm))
+qqcomp(list(depth_norm, depth_unif, depth_snorm))
+cdfcomp(list(depth_norm, depth_unif, depth_snorm))
+ppcomp(list(depth_norm, depth_unif, depth_snorm))
+
+gofstat(list(depth_norm, depth_unif, depth_snorm), 
+        fitnames = c("norm", "unif", "skewnorm"))
+
+
+### apply to sobol process
+
+N <- 10000
+params <- c("$depth$", "$fetch$")
+matrices <- c("A", "B", "AB", "BA")
+first <- total <- "azzini"
+order <- "second"
+R <- 10^3
+type <- "percent"
+conf <- 0.95
+
+
+# population growth function (analagous to my TAM equations)
+population_growth <- function(r, K, X0) {
+  X <- X0
+  for (i in 0:20) {
+    X <- X + r * X * (1 - X / K)
+  }
+  return(X)
+}
+
+
+source("code/000_function_interpolate_y.R")
+
+multi_interpolate <- function(par1, tam1, par2, tam2) {
+  x_values <- par1
+  tam_table <- tam1
+  slopes <- diff(tam_table[2]) / diff(tam_table[1])
+  m1 <- interpolate_y(par1, tam1)
+  x_values <- par2
+  tam_table <- tam2
+  slopes <- diff(tam_table[2]) / diff(tam_table[1])
+  m2 <- interpolate_y(par2, tam2)
+  ifelse(m1 == 0 | m2 == 0, g1 <- 0,
+  g1 <- exp(mean(log(c((m1 + 1), (m2+1))))))
+  return(g1)
+}
+
+multi_interpolate(-29, can_tam_bath, 5, can_tam_fetch)
+
+
+# runs the function in a rowwise fashion (to match layout of the matrix)
+population_growth_run <- function (dt) {
+  return(mapply(population_growth, dt[, 1], dt[, 2], dt[, 3]))
+}
+
+mat <- sobol_matrices(matrices = matrices, N = N, params = params, order = order, type = "LHS")
+
+
+mat[, "$r$"] <- qnorm(mat[, "$r$"], 1.7, 0.3)
+mat[, "$K$"] <- qnorm(mat[, "$K$"], 40, 1)
+mat[, "$N_0$"] <- qunif(mat[, "$N_0$"], 10, 50)
+
+
+Y <- population_growth_run(mat)
+
+plot_uncertainty(Y = Y, N = N) + 
+  labs(y = "Counts", x = "$y$")
+
+quantile(Y, probs = c(0.01, 0.025, 0.5, 0.975, 0.99, 1))
+
+plot_scatter(data = mat, N = N, Y = Y, params = params, method = "bin")
+
+plot_multiscatter(data = mat, N = N, Y = Y, params = params, smpl = 2^11) +
+  geom_point(size = 3)
+
+ind <- sobol_indices(matrices = matrices, Y = Y, N = N, params = params, first = first, total = total, order = order, boot = TRUE, R = R, parallel = "no", type = type, conf = conf)
+
+cols <- colnames(ind$results)[1:5]
+ind$results[, (cols):= round(.SD, 3), .SDcols = (cols)] 
+ind
+
+ind.dummy<-sobol_dummy(Y=Y,N=N,params=params,boot=TRUE,R=R)
+
+plot(ind, dummy = ind.dummy)
+
+plot(ind, order = "second")
 
 
 
@@ -530,6 +735,26 @@ for (i in 1:ncol(mat)) {
 
 
 
+######### FETCH
 
+library(fGarch)
+library(fitdistrplus)
+fetch_norm <- fitdist(vals_fetch$fetch, "norm")
+fetch_unif <- fitdist(vals_fetch$fetch, "unif")
+fetch_snorm <- fitdist(vals_fetch$fetch, "snorm", start  = list(mean = 15,
+                                                               sd = 12,
+                                                               xi = 1.5))
+
+  
+hist(rsnorm(1000, 15, 12, 1.5))
+
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+denscomp(list(fetch_norm, fetch_unif, fetch_snorm))
+qqcomp(list(fetch_norm, fetch_unif, fetch_snorm))
+cdfcomp(list(fetch_norm, fetch_unif, fetch_snorm))
+ppcomp(list(fetch_norm, fetch_unif, fetch_snorm))
+
+gofstat(list(fetch_norm, fetch_unif, fetch_snorm), 
+        fitnames = c("norm", "unif", "skewnorm"))
 
 
