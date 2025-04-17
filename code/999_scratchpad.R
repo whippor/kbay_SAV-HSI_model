@@ -758,3 +758,68 @@ gofstat(list(fetch_norm, fetch_unif, fetch_snorm),
         fitnames = c("norm", "unif", "skewnorm"))
 
 
+
+
+
+################# KITE PLOT AND SIMPSON'S INDEX
+library(vegan)
+library(tidyverse)
+library(viridis)
+
+
+data(BCI)
+BCI$zones <- c(rep("low", 10), rep("medlow", 10), rep("med", 10), rep("medhigh", 10), rep("high", 10))
+BCI <- BCI %>%
+  mutate(zones = factor(zones, levels = c("low", "medlow", "med", "medhigh", "high"))) %>%
+  mutate(height = case_when(zones == "low" ~ 0,
+                            zones == "medlow" ~ 2.5,
+                            zones == "med" ~ 5,
+                            zones == "medhigh" ~ 7.5,
+                            zones == "high" ~ 10))
+
+
+simp <- data.frame(simpson = diversity(BCI[,1:225], "simpson"))
+
+simp$zones <- BCI$zones
+
+
+simp %>%
+ggplot(aes(x = zones, y = simpson)) +
+  geom_boxplot() +
+  theme_bw()
+
+BCI %>%
+  select(Virola.sebifera, 
+         Randia.armata, 
+         Swartzia.simplex.var.grandiflora,
+         Tabebuia.rosea, 
+         Protium.tenuifolium,
+         Socratea.exorrhiza,
+         height) %>%
+  pivot_longer(Virola.sebifera:Socratea.exorrhiza,
+               names_to = 'species',
+               values_to = 'count') %>%
+  group_by(height, species) %>%
+  summarise(abundance = sum(count)) %>%
+  mutate(percent = abundance/sum(abundance)) %>%
+  ggplot(aes(x = height, fill = species)) +
+  geom_ribbon(aes(ymin = (0 - percent)/2, ymax = (0 + percent)/2)) +
+  facet_grid(species~.) +
+  theme_minimal() +
+  theme(axis.text.y = element_blank()) +
+  scale_fill_viridis(discrete = T, begin = 0.2, end = 0.8, guide = "none")
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
