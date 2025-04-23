@@ -301,3 +301,17 @@ final_zero <- under_zero[['mean']] *
   fetch_zero[["HSI_value"]] 
 
 
+
+#####################
+#####################
+
+
+# EXTRACT LAT LON FROM RASTERS AND HSI VALUE
+
+# LAT LON
+pts <- as.points(seagrass3, na.rm = FALSE)
+pts <- project(pts, "+proj=longlat")
+lonlatpts <- crds(pts)
+test <- data.frame(lonlatpts)
+View(test)
+
