@@ -306,12 +306,44 @@ final_zero <- under_zero[['mean']] *
 #####################
 
 
-# EXTRACT LAT LON FROM RASTERS AND HSI VALUE
+# EXTRACT LAT LON FROM RASTERS AND HSI VALUE for SEAGRASS
 
 # LAT LON
-pts <- as.points(seagrass3, na.rm = FALSE)
+bathmask <- clamp(bathymetry_seagr, lower = -10, upper = 3, values = FALSE)
+clamped_final <- mask(seagrass, 
+                      bathmask)
+pts <- as.points(clamped_final, na.rm = TRUE)
 pts <- project(pts, "+proj=longlat")
 lonlatpts <- crds(pts)
-test <- data.frame(lonlatpts)
-View(test)
+seagrass_latlon <- data.frame(lonlatpts)
+seagrass_HSI <- as.data.frame(clamped_final)
+HSI_coords <- seagrass_latlon %>%
+  mutate(HSI = seagrass_HSI$HSI_value)
+
+
+
+
+
+
+# random stratify selection of points
+# round HSI to nearest 0.1
+rounded_HSI <- HSI_coords %>%
+  mutate(roundHSI = round(HSI, 1))
+sampled_HSI <- rounded_HSI %>%
+  group_by(roundHSI) %>%
+  sample_n(5)
+locations <- vect(sampled_HSI, geom = c("x", "y"), crs = "+proj=longlat +datum=WGS84")
+options(terra.pal = viridis(7))
+color_vir <- viridis(7)
+
+clamped_latlong <- crs("+proj=longlat +datum=WGS84")
+plot(clamped_latlong)
+
+plot(locations, col = "black")
+plot(locations, col = color_vir, add = TRUE)
+
+
+
+
+
 
