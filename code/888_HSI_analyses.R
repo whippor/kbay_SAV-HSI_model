@@ -320,30 +320,23 @@ seagrass_HSI <- as.data.frame(clamped_final)
 HSI_coords <- seagrass_latlon %>%
   mutate(HSI = seagrass_HSI$HSI_value)
 
-
-
-
-
-
 # random stratify selection of points
 # round HSI to nearest 0.1
 rounded_HSI <- HSI_coords %>%
   mutate(roundHSI = round(HSI, 1))
 sampled_HSI <- rounded_HSI %>%
   group_by(roundHSI) %>%
-  sample_n(5)
+  sample_n(5) %>%
+  bind_rows(data.frame("x" = c(rep(NA, 11)),
+                       "y" = c(rep(NA, 11)),
+                       "HSI" = c(rep(NA, 11)),
+                       "roundHSI" = c(seq(from = 0, to = 1, by = 0.1))))
 locations <- vect(sampled_HSI, geom = c("x", "y"), crs = "+proj=longlat +datum=WGS84")
-options(terra.pal = viridis(7))
-color_vir <- viridis(7)
 
-clamped_latlong <- crs("+proj=longlat +datum=WGS84")
-plot(clamped_latlong)
+clamped_proj <- project(clamped_final, "+proj=longlat +datum=WGS84")
 
-plot(locations, col = "black")
-plot(locations, col = color_vir, add = TRUE)
-
-
-
-
-
+plot(clamped_proj, col = viridis(10))
+plot(locations, col = "red", cex = 1.5, add = TRUE)
+plot(locations, "roundHSI", col = viridis(11), breaks = 10, add = TRUE, legend = FALSE)
+text(locations, locations$roundHSI, col = "red", halo = TRUE, pos = 3)
 
