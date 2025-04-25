@@ -358,3 +358,112 @@ write_csv(filter(sampled_HSI, !is.na(HSI)), "C:/Users/Ross.Whippo/Desktop/Seagra
 
 
 
+# EXTRACT LAT LON FROM RASTERS AND HSI VALUE for UNDERSTOREY
+
+# LAT LON
+bathmask <- clamp(bathymetry_under, lower = -30, upper = 3, values = FALSE)
+clamped_final <- mask(understorey, 
+                      bathmask)
+pts <- as.points(clamped_final, na.rm = TRUE)
+pts <- project(pts, "+proj=longlat")
+lonlatpts <- crds(pts)
+under_latlon <- data.frame(lonlatpts)
+under_HSI <- as.data.frame(clamped_final)
+HSI_coords <- under_latlon %>%
+  mutate(HSI = under_HSI$mean)
+
+# random stratify selection of points
+# round HSI to nearest 0.1
+rounded_HSI <- HSI_coords %>%
+  mutate(roundHSI = round(HSI, 1)) %>%
+  mutate(bayside = case_when(y < 59.599 ~ "South", # roughly stratify the bay N-S
+                             y >= 59.599 ~ "North"))
+sampled_HSI <- rounded_HSI %>%
+  group_by(bayside, roundHSI) %>%
+  sample_n(3)
+sampled_HSI$site <- 1:nrow(sampled_HSI)
+locations <- vect(sampled_HSI, geom = c("x", "y"), crs = "+proj=longlat +datum=WGS84")
+
+clamped_proj <- project(clamped_final, "+proj=longlat +datum=WGS84")
+
+ggplot() +
+  geom_spatraster(data = clamped_proj) +
+  geom_spatvector(data = locations, col = "red", size = 3) +
+  geom_spatvector(data = filter(locations, !is.na(HSI)), aes(color = roundHSI)) +
+  geom_text_repel(data = filter(sampled_HSI, !is.na(HSI)),
+                  aes(x = x, y = y, label = site), 
+                  col = "red",
+                  size = 5,
+                  box.padding = 0.5,
+                  max.overlaps = Inf) +
+  scale_fill_viridis("HSI", na.value = NA) +
+  scale_color_viridis(guide = "none") +
+  theme_minimal() +
+  labs(title = "Understorey HSI - Validation Sites")
+
+write_csv(filter(sampled_HSI, !is.na(HSI)), "C:/Users/Ross.Whippo/Desktop/UnderstoreyHSIValidation.csv")
+
+
+# EXTRACT LAT LON FROM RASTERS AND HSI VALUE for CANOPY
+
+# LAT LON
+bathmask <- clamp(bathymetry_canop, lower = -30, upper = 0, values = FALSE)
+clamped_final <- mask(canopy, 
+                      bathmask)
+pts <- as.points(clamped_final, na.rm = TRUE)
+pts <- project(pts, "+proj=longlat")
+lonlatpts <- crds(pts)
+canop_latlon <- data.frame(lonlatpts)
+canop_HSI <- as.data.frame(clamped_final)
+HSI_coords <- canop_latlon %>%
+  mutate(HSI = canop_HSI$HSI_value)
+
+# random stratify selection of points
+# round HSI to nearest 0.1
+rounded_HSI <- HSI_coords %>%
+  mutate(roundHSI = round(HSI, 1)) %>%
+  mutate(bayside = case_when(y < 59.599 ~ "South", # roughly stratify the bay N-S
+                             y >= 59.599 ~ "North"))
+sampled_HSI <- rounded_HSI %>%
+  group_by(bayside, roundHSI) %>%
+  sample_n(3, replace = TRUE) %>% # there is only one 0.3 rounded HSI cell in North
+  bind_rows(data.frame("x" = c(rep(NA, 11)),
+                       "y" = c(rep(NA, 11)),
+                       "HSI" = c(rep(NA, 11)),
+                       "roundHSI" = c(seq(from = 0, to = 1, by = 0.1)))) %>%
+  distinct()
+sampled_HSI$site <- 1:nrow(sampled_HSI)
+locations <- vect(sampled_HSI, geom = c("x", "y"), crs = "+proj=longlat +datum=WGS84")
+
+clamped_proj <- project(clamped_final, "+proj=longlat +datum=WGS84")
+
+ggplot() +
+  geom_spatraster(data = clamped_proj) +
+  geom_spatvector(data = locations, col = "red", size = 3) +
+  geom_spatvector(data = filter(locations, !is.na(HSI)), aes(color = roundHSI)) +
+  geom_text_repel(data = filter(sampled_HSI, !is.na(HSI)),
+                  aes(x = x, y = y, label = site), 
+                  col = "red",
+                  size = 5,
+                  box.padding = 0.5,
+                  max.overlaps = Inf) +
+  scale_fill_viridis("HSI", na.value = NA) +
+  scale_color_viridis(guide = "none") +
+  theme_minimal() +
+  labs(title = "Canopy HSI - Validation Sites")
+
+write_csv(filter(sampled_HSI, !is.na(HSI)), "C:/Users/Ross.Whippo/Desktop/CanopyHSIValidation.csv")
+
+
+############### ALL LOCATIONS
+
+SGval <- read_csv("data/e_validation_data/seagrass_validation/SeagrassHSIValidation.csv")
+Canval <- read_csv("data/e_validation_data/canopy_validation/CanopyHSIValidation.csv")
+Undval <- read_csv("data/e_validation_data/understorey_validation/UnderstoreyHSIValidation.csv")
+
+# put them together for a master sampling map
+
+
+
+
+
