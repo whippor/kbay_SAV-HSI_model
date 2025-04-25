@@ -16,7 +16,8 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse,
                terra, # is replacing the raster package
                viridis,
-               leaflet)
+               leaflet,
+               ggrepel)
 
 #####################################
 #####################################
@@ -304,7 +305,7 @@ final_zero <- under_zero[['mean']] *
 
 #####################
 #####################
-
+library(tidyterra)
 
 # EXTRACT LAT LON FROM RASTERS AND HSI VALUE for SEAGRASS
 
@@ -323,20 +324,37 @@ HSI_coords <- seagrass_latlon %>%
 # random stratify selection of points
 # round HSI to nearest 0.1
 rounded_HSI <- HSI_coords %>%
-  mutate(roundHSI = round(HSI, 1))
+  mutate(roundHSI = round(HSI, 1)) %>%
+  mutate(bayside = case_when(y < 59.599 ~ "South", # roughly stratify the bay N-S
+                             y >= 59.599 ~ "North"))
 sampled_HSI <- rounded_HSI %>%
-  group_by(roundHSI) %>%
-  sample_n(5) %>%
+  group_by(bayside, roundHSI) %>%
+  sample_n(3) %>%
   bind_rows(data.frame("x" = c(rep(NA, 11)),
                        "y" = c(rep(NA, 11)),
                        "HSI" = c(rep(NA, 11)),
                        "roundHSI" = c(seq(from = 0, to = 1, by = 0.1))))
+sampled_HSI$site <- 1:nrow(sampled_HSI)
 locations <- vect(sampled_HSI, geom = c("x", "y"), crs = "+proj=longlat +datum=WGS84")
 
 clamped_proj <- project(clamped_final, "+proj=longlat +datum=WGS84")
 
-plot(clamped_proj, col = viridis(10))
-plot(locations, col = "red", cex = 1.5, add = TRUE)
-plot(locations, "roundHSI", col = viridis(11), breaks = 10, add = TRUE, legend = FALSE)
-text(locations, locations$roundHSI, col = "red", halo = TRUE, pos = 3)
+ggplot() +
+  geom_spatraster(data = clamped_proj) +
+  geom_spatvector(data = locations, col = "red", size = 3) +
+  geom_spatvector(data = filter(locations, !is.na(HSI)), aes(color = roundHSI)) +
+  geom_text_repel(data = filter(sampled_HSI, !is.na(HSI)),
+                   aes(x = x, y = y, label = site), 
+                  col = "red",
+                  size = 5,
+                  box.padding = 0.5,
+                  max.overlaps = Inf) +
+  scale_fill_viridis("HSI", na.value = NA) +
+  scale_color_viridis(guide = "none") +
+  theme_minimal() +
+  labs(title = "Seagrass HSI - Validation Sites")
+
+write_csv(filter(sampled_HSI, !is.na(HSI)), "C:/Users/Ross.Whippo/Desktop/SeagrassHSIValidation.csv")  
+
+
 
