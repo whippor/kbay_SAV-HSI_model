@@ -39,12 +39,14 @@ bathymetry_seagr <- terra::rast("data/b_intermediate_data/seagrass_bathymetry/ba
 
 presence <- terra::rast("data/c_submodel_data/seagrass_presence_HSI/presenceHSI.grd")
 
+MLLWcor <- 1.546 # determined w/ https://vdatum.noaa.gov/vdatumweb/
+
 #####################################
 #####################################
 
 # canopy stats
-# mask out all HSI below -30 m, above 0 m
-bathmask <- clamp(bathymetry_canop, lower = -30, upper = 0, values = FALSE)
+# mask out all HSI below -30 m, above 0 m (w/  - 1.546 m correction for NAVD88/MLLW
+bathmask <- clamp(bathymetry_canop, lower = -30 - MLLWcor, upper = 0 - MLLWcor, values = FALSE)
 canopy30 <- mask(canopy, 
                       bathmask)
 plot(canopy30)
@@ -56,7 +58,7 @@ plet(canopy30,
 terra::expanse(canopy) # 946.16 km^2 (total bay)
 terra::hist(canopy)
 
-terra::expanse(canopy30) # 352.59 km^2 (above -30)
+terra::expanse(canopy30) # 331.97 km^2 (above -30)
 terra::hist(canopy30, maxcell = 1100000)
 
 ## proportion suitability 
@@ -88,7 +90,7 @@ allones <- under_df %>%
 
 # understorey stats
 # mask out all HSI below -30 m, above 3 m
-bathmask <- clamp(bathymetry_under, lower = -30, upper = 3, values = FALSE)
+bathmask <- clamp(bathymetry_under, lower = -30 - MLLWcor, upper = 3 - MLLWcor, values = FALSE)
 understorey30 <- mask(understorey, 
                       bathmask)
 plot(understorey30)
@@ -100,7 +102,7 @@ plet(understorey30,
 terra::expanse(understorey) # 946.16 km^2 (total bay)
 terra::hist(understorey, maxcell = 1100000)
 
-terra::expanse(understorey30) # 373.91 km^2 (above -30)
+terra::expanse(understorey30) # 383.08 km^2 (above -30)
 terra::hist(understorey30, maxcell = 1100000)
 
 ## proportion suitability 
@@ -135,7 +137,7 @@ canopyDF %>%
 
 #seagrass stats
 # mask out all HSI below -7 m, above 3 m
-bathmask <- clamp(bathymetry_seagr, lower = -10, upper = 3, values = FALSE)
+bathmask <- clamp(bathymetry_seagr, lower = -10 - MLLWcor, upper = 3 - MLLWcor, values = FALSE)
 seagrass3 <- mask(seagrass, 
                  bathmask)
 plot(seagrass3)
@@ -181,7 +183,7 @@ seag1 <- data.frame(seagrass3[seagrass3 == 1]) #4292
 #####################################
 
 # mask out all HSI below -30 m, above 3 m
-bathmask <- clamp(bathymetry_under, lower = -30, upper = 3, values = FALSE)
+bathmask <- clamp(bathymetry_under, lower = -30 - MLLWcor, upper = 3 - MLLWcor, values = FALSE)
 allmax30 <- mask(allmax, 
                    bathmask)
 plot(allmax30)
@@ -193,7 +195,7 @@ plet(allmax30,
 terra::expanse(allmax) # 946.16 km^2 (total bay)
 terra::hist(allmax)
 
-terra::expanse(allmax30) # 373.91 km^2 (above -30)
+terra::expanse(allmax30) # 383.09 km^2 (above -30)
 terra::hist(allmax30, maxcell = 1100000)
 
 ## proportion suitability 
@@ -310,7 +312,7 @@ library(tidyterra)
 # EXTRACT LAT LON FROM RASTERS AND HSI VALUE for SEAGRASS
 
 # LAT LON
-bathmask <- clamp(bathymetry_seagr, lower = -10, upper = 3, values = FALSE)
+bathmask <- clamp(bathymetry_seagr, lower = -10 - MLLWcor, upper = 3 - MLLWcor, values = FALSE)
 clamped_final <- mask(seagrass, 
                       bathmask)
 pts <- as.points(clamped_final, na.rm = TRUE)
@@ -329,7 +331,7 @@ rounded_HSI <- HSI_coords %>%
                              y >= 59.599 ~ "North"))
 sampled_HSI <- rounded_HSI %>%
   group_by(bayside, roundHSI) %>%
-  sample_n(3) %>%
+  sample_n(3, replace = TRUE) %>% # there are only 2 0.4 rounded HSI cell in South
   bind_rows(data.frame("x" = c(rep(NA, 11)),
                        "y" = c(rep(NA, 11)),
                        "HSI" = c(rep(NA, 11)),
@@ -361,7 +363,7 @@ write_csv(filter(sampled_HSI, !is.na(HSI)), "C:/Users/Ross.Whippo/Desktop/Seagra
 # EXTRACT LAT LON FROM RASTERS AND HSI VALUE for UNDERSTOREY
 
 # LAT LON
-bathmask <- clamp(bathymetry_under, lower = -30, upper = 3, values = FALSE)
+bathmask <- clamp(bathymetry_under, lower = -30 - MLLWcor, upper = 3 - MLLWcor, values = FALSE)
 clamped_final <- mask(understorey, 
                       bathmask)
 pts <- as.points(clamped_final, na.rm = TRUE)
@@ -407,7 +409,7 @@ write_csv(filter(sampled_HSI, !is.na(HSI)), "C:/Users/Ross.Whippo/Desktop/Unders
 # EXTRACT LAT LON FROM RASTERS AND HSI VALUE for CANOPY
 
 # LAT LON
-bathmask <- clamp(bathymetry_canop, lower = -30, upper = 0, values = FALSE)
+bathmask <- clamp(bathymetry_canop, lower = -30 - MLLWcor, upper = 0 - MLLWcor, values = FALSE)
 clamped_final <- mask(canopy, 
                       bathmask)
 pts <- as.points(clamped_final, na.rm = TRUE)
@@ -458,12 +460,72 @@ write_csv(filter(sampled_HSI, !is.na(HSI)), "C:/Users/Ross.Whippo/Desktop/Canopy
 ############### ALL LOCATIONS
 
 SGval <- read_csv("data/e_validation_data/seagrass_validation/SeagrassHSIValidation.csv")
+SGval$type <- "S"
 Canval <- read_csv("data/e_validation_data/canopy_validation/CanopyHSIValidation.csv")
+Canval$type <- "C"
 Undval <- read_csv("data/e_validation_data/understorey_validation/UnderstoreyHSIValidation.csv")
+Undval$type <- "U"
+
+
+bathmask <- clamp(bathymetry_canop, lower = -30 - MLLWcor, upper = 0 - MLLWcor, values = FALSE)
+clamped_final <- mask(canopy, 
+                      bathmask)
+clamped_proj <- project(clamped_final, "+proj=longlat +datum=WGS84")
+locations <- vect(Canval, geom = c("x", "y"), crs = "+proj=longlat +datum=WGS84")
+ggplot() +
+  geom_spatraster(data = clamped_proj) +
+  geom_spatvector(data = locations, col = "red", size = 3) +
+  geom_spatvector(data = filter(locations, !is.na(HSI)), aes(color = roundHSI)) +
+  geom_text_repel(data = filter(Canval, !is.na(HSI)),
+                  aes(x = x, y = y, label = site), 
+                  col = "red",
+                  size = 5,
+                  box.padding = 0.5,
+                  max.overlaps = Inf) +
+  scale_fill_viridis("HSI", na.value = NA) +
+  scale_color_viridis(guide = "none") +
+  theme_minimal() +
+  labs(title = "Canopy HSI - Validation Sites")
+
+
+# ADD UNDERSTOREY AND SEAGRASS MAPS HERE FROM READ IN CSVs
+
+## coordinate reference system
+### EPSG:3338 is NAD83 / Alaska Albers (https://epsg.io/3338)
+crs <- "EPSG:3338"
+
+# define vector for region of interest
+roi <- terra::vect("data/a_raw_data/LDA_2016.kml")
+roi <- project(roi, crs)
+bathymetry <- terra::rast("data/b_intermediate_data/bathymetry/bathymetry.grd")
+# constrain bathymetry to roi
+bathy_roi <- terra::crop(bathymetry, roi, mask = TRUE) 
+bathmask <- clamp(bathy_roi, lower = -30 - MLLWcor, upper = 3 - MLLWcor, values = FALSE)
+
 
 # put them together for a master sampling map
 
+Validation_master <- SGval %>%
+  bind_rows(Canval, Undval) %>%
+  unite("location", c(type, site), sep = "_")
 
+locations <- vect(Validation_master, geom = c("x", "y"), crs = "+proj=longlat +datum=WGS84")
 
+ggplot() +
+  geom_spatraster(data = project(bathmask, "+proj=longlat +datum=WGS84")) +
+  geom_spatvector(data = locations, col = "red", size = 3) +
+  geom_spatvector(data = filter(locations, !is.na(HSI)), aes(color = roundHSI)) +
+  geom_text_repel(data = filter(Validation_master, !is.na(HSI)),
+                  aes(x = x, y = y, label = location), 
+                  col = "red",
+                  size = 3,
+                  box.padding = 0.5,
+                  max.overlaps = Inf) +
+  scale_fill_viridis("Depth (m)", 
+                     option = "mako",
+                     na.value = NA) +
+  scale_color_viridis(guide = "none") +
+  theme_minimal() +
+  labs(title = "ALL SAV HSI - Validation Sites")
 
 

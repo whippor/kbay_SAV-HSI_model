@@ -82,15 +82,16 @@ seagrass_expand <- terra::extend(seagrass_rast, bathymetry)
 varnames(seagrass_expand) <- "seagrass"
 
 # fill empty space in raster with Unclassified
-unclass_rast <- rast(ncol = 1064,
-                     nrow = 994,
-                     xmin = 119250,
-                     xmax = 172450,
-                     ymin = 1046527, 
-                     ymax = 1096227,
-                     crs = crs(seagrass_expand))
+# unclass_rast <- rast(ncol = 1064,
+#                     nrow = 994,
+#                     xmin = 119250,
+#                     xmax = 172450,
+#                     ymin = 1046527, 
+#                     ymax = 1096227,
+#                     crs = crs(seagrass_expand))
 
-seagrass_final <- terra::merge(seagrass_expand, unclass_rast)
+#seagrass_final <- terra::merge(seagrass_expand, unclass_rast)
+seagrass_final <- seagrass_expand
 names(seagrass_final) <- "seagrass"
 
 # plot new raster

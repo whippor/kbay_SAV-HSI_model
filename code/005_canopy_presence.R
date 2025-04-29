@@ -92,15 +92,16 @@ kelp_expand <- terra::extend(kelp, bathymetry)
 varnames(kelp_expand) <- "kelp"
 
 # fill empty space in raster with Unclassified
-unclass_rast <- rast(ncol = 1064,
-                     nrow = 994,
-                     xmin = 119250,
-                     xmax = 172450,
-                     ymin = 1046527, 
-                     ymax = 1096227,
-                     crs = crs(kelp_expand))
+# unclass_rast <- rast(ncol = 1064,
+#                     nrow = 994,
+#                     xmin = 119250,
+#                     xmax = 172450,
+#                     ymin = 1046527, 
+#                     ymax = 1096227,
+#                     crs = crs(kelp_expand))
 
-kelp_final <- terra::merge(kelp_expand, unclass_rast)
+# kelp_final <- terra::merge(kelp_expand, unclass_rast, first = TRUE)
+kelp_final <- kelp_expand
 names(kelp_final) <- c("kelp", "kelp", "kelp")
 
 # plot new raster
