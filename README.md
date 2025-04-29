@@ -1,6 +1,6 @@
 # Kachemak Bay Submerged Aquatic Vegetation Habitat Suitability Index Model
 
-###### README LAST UPDATED: 2025/03/07
+###### README LAST UPDATED: 2025/04/29
 
 ------------------------------------------------------------------------
 
@@ -30,9 +30,15 @@ This project is in active development and will change as additional datasets and
 
 -   Identify additional environmental parameters and datasets relevant to habitat suitability, especially oceanographic parameters including temperature, salinity, and nutrients.
 
--   Validate all TAM table values with references.
+-   Ensure proper functioning of local fetch calculation code.
+
+-   ~~Validate all TAM table values with references.~~ **Completed: 2025/04/28**
 
 -   Perform model selection and sensitivity analyses on models and submodels to identify the number and identity of parameters that explain the most model variance.
+
+-   Conduct model validation through field survey methods across all SAV types, HSI values, and locales.
+
+-   Create markdown summary document with major methods, inputs, and outputs.
 
 ------------------------------------------------------------------------
 
@@ -52,6 +58,8 @@ Once cloned, the code can by run piecemeal for each SAV group and parameter, or 
 | 7\*\*                  | multi-model execution                       |
 | 888                    | additional analysis and summary             |
 | 999                    | scratch pad                                 |
+| U\*\*                  | uncertainty analysis components             |
+| V\*\*                  | validation analysis components              |
 | \*1\*                  | submodel                                    |
 | \*2\*                  | SAV-specific HSI model                      |
 | \*31                   | "run all" execution                         |
@@ -89,11 +97,11 @@ Substrate type data were taken from NCEI archives as a thematic map of benthic h
 
 ### Fetch
 
-Fetch was calculated from the full bathymetry layer as reference for land and water features using the 'get_fetch()' command in the fetchR package. See the [fetchR](http://cran.nexr.com/web/packages/fetchR/index.html) documentation for details.
+Fetch was calculated from the full bathymetry layer as reference for land and water features using functions modified from the 'get_fetch()' command in the fetchR package. See the [fetchR](http://cran.nexr.com/web/packages/fetchR/index.html) documentation for details.
 
 ### SAV Presence
 
-Both kelp and seagrass presence data were extracted from the AOOS Workspace and included kelp cover polygons of Kachemak Bay for 2000-2002, and seagrass polygons from [????].
+Both kelp and seagrass presence data were extracted from the AOOS Workspace and included kelp cover polygons of Kachemak Bay for 2000-2002, and seagrass polygons from 2005.
 
 ------------------------------------------------------------------------
 
@@ -117,20 +125,22 @@ Carrillo, C., S.K. McKay, and T.S. Swannack. 2020. Ecological Model Development:
 
 ### TAM References
 
-| SAV              | Parameter   | Citation                                                                                                                                                                                                                                                                   |
-|------------------|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| canopy kelp      | depth       | Springer YP, Hays CG, Carr MH, Mackey MR. Toward ecosystem-based management of marine macroalgae—The bull kelp, *Nereocystis luetkeana*. Oceanography and marine biology. 2010 May 12;48:1.                                                                                |
-| canopy kelp      | substrate   | Dayton PK. Ecology of kelp communities. Annual review of ecology and systematics. 1985 Jan 1:215-45.                                                                                                                                                                       |
-| canopy kelp      | fetch       | Smale DA, Burrows MT, Evans AJ, King N, Sayer MD, Yunnie AL, Moore PJ. Linking environmental variables with regional-scale variability in ecological structure and standing stock of carbon within UK kelp forests. Marine Ecology Progress Series. 2016 Jan 19;542:79-95. |
-| canopy kelp      | temperature | Weigel BL, Small SL, Berry HD, Dethier MN. Effects of temperature and nutrients on microscopic stages of the bull kelp (Nereocystis luetkeana, Phaeophyceae). Journal of phycology. 2023 Oct;59(5):893-907.                                                                |
-| canopy kelp      | salinity    |                                                                                                                                                                                                                                                                            |
-| understorey kelp | depth       | Bekkby T, Smit C, Gundersen H, Rinde E, Steen H, Tveiten L, Gitmark JK, Fredriksen S, Albretsen J, Christie H. The abundance of kelp is modified by the combined impact of depth, waves and currents. Frontiers in Marine Science. 2019 Aug 6;6:475.                       |
-| understorey kelp | substrate   | Dayton PK. Ecology of kelp communities. Annual review of ecology and systematics. 1985 Jan 1:215-45.                                                                                                                                                                       |
-| understorey kelp | fetch       | Bekkby T, Moy FE. Developing spatial models of sugar kelp (Saccharina latissima) potential distribution under natural conditions and areas of its disappearance in Skagerrak. Estuarine, Coastal and Shelf Science. 2011 Dec 20;95(4):477-83.                              |
-| understorey kelp | temperature | Bolton JJ, Lüning K. Optimal growth and maximal survival temperatures of Atlantic Laminaria species (Phaeophyta) in culture. Marine Biology. 1982 Jan;66:89-94.                                                                                                            |
-| understorey kelp | salinity    | Spurkland T, Iken K. Salinity and irradiance effects on growth and maximum photosynthetic quantum yield in subarctic *Saccharina latissima* (Laminariales, Laminariaceae).                                                                                                 |
-| seagrass         | depth       | Thom RM, Southard SL, Borde AB, Stoltz P. Light requirements for growth and survival of eelgrass (*Zostera marina* L.) in Pacific Northwest (USA) estuaries. Estuaries and Coasts. 2008 Nov;31:969-80.                                                                     |
-| seagrass         | substrate   | Larkum AW, Orth RJ, Duarte CM. Seagrasses: biology, ecology and conservation. Phycologia. 2006;45(5):5.                                                                                                                                                                    |
-| seagrass         | fetch       | Oreska MP, McGlathery KJ, Wiberg PL, Orth RJ, Wilcox DJ. Defining the *Zostera marina* (eelgrass) niche from long-term success of restored and naturally colonized meadows: Implications for seagrass restoration. Estuaries and coasts. 2021 Mar;44(2):396-411.           |
-| seagrass         | temperature | Nejrup LB, Pedersen MF. Effects of salinity and water temperature on the ecological performance of *Zostera marina*. Aquatic Botany. 2008 Apr 1;88(3):239-46.                                                                                                              |
-| seagrass         | salinity    | Nejrup LB, Pedersen MF. Effects of salinity and water temperature on the ecological performance of *Zostera marina*. Aquatic Botany. 2008 Apr 1;88(3):239-46.                                                                                                              |
+| SAV              | Parameter      | Citation                                                                                                                                                                                                                                                                   |
+|---------|---------|-----------------------------------------------------|
+| canopy kelp      | depth          | Springer YP, Hays CG, Carr MH, Mackey MR. Toward ecosystem-based management of marine macroalgae—The bull kelp, *Nereocystis luetkeana*. Oceanography and marine biology. 2010 May 12;48:1.                                                                                |
+| canopy kelp      | substrate      | Dayton PK. Ecology of kelp communities. Annual review of ecology and systematics. 1985 Jan 1:215-45.                                                                                                                                                                       |
+| canopy kelp      | fetch          | Smale DA, Burrows MT, Evans AJ, King N, Sayer MD, Yunnie AL, Moore PJ. Linking environmental variables with regional-scale variability in ecological structure and standing stock of carbon within UK kelp forests. Marine Ecology Progress Series. 2016 Jan 19;542:79-95. |
+| canopy kelp      | temperature \* | Weigel BL, Small SL, Berry HD, Dethier MN. Effects of temperature and nutrients on microscopic stages of the bull kelp (Nereocystis luetkeana, Phaeophyceae). Journal of phycology. 2023 Oct;59(5):893-907.                                                                |
+| canopy kelp      | salinity \*    |                                                                                                                                                                                                                                                                            |
+| understorey kelp | depth          | Bekkby T, Smit C, Gundersen H, Rinde E, Steen H, Tveiten L, Gitmark JK, Fredriksen S, Albretsen J, Christie H. The abundance of kelp is modified by the combined impact of depth, waves and currents. Frontiers in Marine Science. 2019 Aug 6;6:475.                       |
+| understorey kelp | substrate      | Dayton PK. Ecology of kelp communities. Annual review of ecology and systematics. 1985 Jan 1:215-45.                                                                                                                                                                       |
+| understorey kelp | fetch          | Bekkby T, Moy FE. Developing spatial models of sugar kelp (Saccharina latissima) potential distribution under natural conditions and areas of its disappearance in Skagerrak. Estuarine, Coastal and Shelf Science. 2011 Dec 20;95(4):477-83.                              |
+| understorey kelp | temperature \* | Bolton JJ, Lüning K. Optimal growth and maximal survival temperatures of Atlantic Laminaria species (Phaeophyta) in culture. Marine Biology. 1982 Jan;66:89-94.                                                                                                            |
+| understorey kelp | salinity \*    | Spurkland T, Iken K. Salinity and irradiance effects on growth and maximum photosynthetic quantum yield in subarctic *Saccharina latissima* (Laminariales, Laminariaceae).                                                                                                 |
+| seagrass         | depth          | Thom RM, Southard SL, Borde AB, Stoltz P. Light requirements for growth and survival of eelgrass (*Zostera marina* L.) in Pacific Northwest (USA) estuaries. Estuaries and Coasts. 2008 Nov;31:969-80.                                                                     |
+| seagrass         | substrate      | Larkum AW, Orth RJ, Duarte CM. Seagrasses: biology, ecology and conservation. Phycologia. 2006;45(5):5.                                                                                                                                                                    |
+| seagrass         | fetch          | Oreska MP, McGlathery KJ, Wiberg PL, Orth RJ, Wilcox DJ. Defining the *Zostera marina* (eelgrass) niche from long-term success of restored and naturally colonized meadows: Implications for seagrass restoration. Estuaries and coasts. 2021 Mar;44(2):396-411.           |
+| seagrass         | temperature \* | Nejrup LB, Pedersen MF. Effects of salinity and water temperature on the ecological performance of *Zostera marina*. Aquatic Botany. 2008 Apr 1;88(3):239-46.                                                                                                              |
+| seagrass         | salinity \*    | Nejrup LB, Pedersen MF. Effects of salinity and water temperature on the ecological performance of *Zostera marina*. Aquatic Botany. 2008 Apr 1;88(3):239-46.                                                                                                              |
+
+\* Not currently included in HSI calculations
