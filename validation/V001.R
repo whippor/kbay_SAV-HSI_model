@@ -1,6 +1,6 @@
-################################
-### V01. Validation Sampling ###
-################################
+########################################
+### V01. Validation Sampling - Field ###
+########################################
 
 # reproducibility
 renv::restore()
@@ -319,4 +319,5 @@ ggplot() +
   labs(title = "ALL SAV HSI - Validation Sites")
 
 # write_csv(Validation_master, "data/e_validation_data/AllHSIValidation.csv")
+
 

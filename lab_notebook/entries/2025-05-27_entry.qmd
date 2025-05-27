@@ -1,0 +1,25 @@
+---
+title: "Lab Entry - Validation Efforts"
+date: 2025-05-27
+format: html
+---
+
+## Objective
+
+To use the 'presence' data sets for canopy and seagrass as a method for validating the model outputs.
+
+## Method
+
+New scripts for canopy and seagrass were created in the validation code folders.
+
+Full HSI models minus presence layers were added.
+
+Presence was then overlaid and a scale for performance was created from -1 to 1, with -1 being underprediction by the model and 1 being overprediction by the model. 0 indicated perfect agreement.
+
+## Results
+
+Both models had high levels of joint-absence overlap. Removing the overlap greatly decreased the model's accuracy.
+
+## Notes
+
+The seagrass model may be underpredicting because of inaccurate substrate values, or inaccurate TAM values. Consider increasing TAM values of seagrass for gravel/cobble substrate.
