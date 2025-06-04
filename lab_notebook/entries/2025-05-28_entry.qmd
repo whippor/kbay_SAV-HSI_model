@@ -1,0 +1,19 @@
+---
+title: "Lab Entry"
+date: 2025-05-28
+format: html
+---
+
+## Objective
+
+Troubleshoot accuracy of the model compared to historic extents of canopy kelp and seagrass.
+
+### Additional Notes
+
+It seems that the canopy model might be set too shallow. There are multiple places along the outside North bay and near Seldovia that are predicting canopy right next to shore. Maybe pull those out?
+
+## Method
+
+## Results
+
+## Notes
