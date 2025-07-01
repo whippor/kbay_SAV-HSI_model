@@ -44,12 +44,11 @@ substrate_dir <- "data/b_intermediate_data/substrate"
 ### EPSG:3338 is NAD83 / Alaska Albers (https://epsg.io/3338)
 crs <- "EPSG:3338"
 
-# define vector for region of interest
-roi <- terra::vect("data/a_raw_data/LDA_2016.kml")
-roi <- project(roi, crs)
-
 # import bathymetry as base raster
 bathymetry <- terra::rast("data/b_intermediate_data/understorey_bathymetry/bathymetry.grd")
+
+# read in roi
+roi <- terra::vect("data/b_intermediate_data/roi/roi.shp")
 
 #####################################
 #####################################
@@ -143,6 +142,7 @@ joined_df <- joined_df %>%
                                subclass == "Bedrock" ~ "Bedrock",
                                .default = substrate))
 values(segs_rast) <- joined_df$substrate
+segs_rast <- crop(segs_rast, roi)
 plot(segs_rast, plg=list( # parameters for drawing legend
                 title = "Substrate",
                 title.cex = 2, # Legend title size

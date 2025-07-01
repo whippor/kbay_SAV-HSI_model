@@ -813,9 +813,39 @@ BCI %>%
   
 
 
+library(terra)
+
+# https://data.noaa.gov/metaview/page?xml=NOAA/NESDIS/NGDC/MGG/NOS/H08001-H10000/iso/xml/H09877.xml&view=getDataView&header=none
+
+spit_df <- read_csv("C:/Users/Ross.Whippo/Downloads/H09877.xyz")
+spit_df <- spit_df |>
+  select(lat, long, depth)
+str(spit_df)
+
+spit_df <- data.frame(spit_df)
+#spit_df <- as.character(spit_df)
+r1 <- rast(xmin = min(spit_df$lat, xmax = max(spit_df$lat)),
+           ymin = min(spit_df$long, ymax = max(spit_df$long)),
+           resolution = c(10, 10), crs = "EPSG:4267")
+
+final_raster <- rasterize(spit_df[, c("lat", "long")], r1, field = "depth")
+
+plet(final_raster)
+
+spit_bath <- vect(spit_df, type = "xyz")
 
 
+spit_bath <- rast("C:/Users/Ross.Whippo/Downloads/H09877.xyz")
+ext(spit_bath) <- c(0, 11625, 0, 9859)
 
+spit_resampled <- terra::resample(spit_bath, allmax) # Resample to a coarser resolution
+
+
+ext(spit_bath)
+crs(spit_bath)
+crs(spit_resampled) <- "epsg:4267"
+spit_reproj <- project(spit_resampled, "EPSG:4326")
+plet(spit_resampled)
 
 
 

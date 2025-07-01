@@ -51,7 +51,7 @@ roi_dir <- "data/b_intermediate_data/roi"
 crs <- "EPSG:3338"
 
 # define vector for region of interest
-roi <- terra::vect("data/a_raw_data/LDA_2016.kml")
+roi <- terra::vect("data/b_intermediate_data/roi/roi.shp")
 roi <- project(roi, crs)
 
 # export roi

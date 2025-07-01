@@ -44,6 +44,7 @@ roi <- terra::vect(roi_dir)
 
 # load data
 fetch <- terra::rast("data/b_intermediate_data/fetch/fetch.grd")
+fetch <- crop(fetch, roi)
 fetch <- fetch/1000
 
 tam_fetch <- read_csv("data/x_tam_tables/seagrass/seagrass_fetch.csv")

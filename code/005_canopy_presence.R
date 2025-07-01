@@ -44,12 +44,12 @@ kelp_dir <- "data/b_intermediate_data/canopy_presence"
 ### EPSG:3338 is NAD83 / Alaska Albers (https://epsg.io/3338)
 crs <- "EPSG:3338"
 
-# define vector for region of interest
-roi <- terra::vect("data/a_raw_data/LDA_2016.kml")
-roi <- project(roi, crs)
-
 # import bathymetry as base raster
 bathymetry <- terra::rast("data/b_intermediate_data/canopy_bathymetry/bathymetry.grd")
+
+# define vector for region of interest
+roi <- terra::vect("data/b_intermediate_data/roi/roi.shp")
+roi <- project(roi, crs)
 
 #####################################
 #####################################
@@ -103,6 +103,7 @@ varnames(kelp_expand) <- "kelp"
 # kelp_final <- terra::merge(kelp_expand, unclass_rast, first = TRUE)
 kelp_final <- kelp_expand
 names(kelp_final) <- c("kelp", "kelp", "kelp")
+kelp_final <- crop(kelp_final, roi)
 
 # plot new raster
 plot(kelp_final, col = viridis(nrow(kelp_final), begin = 0.2, end = 0.8))

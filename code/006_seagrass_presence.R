@@ -44,12 +44,12 @@ seagrass_dir <- "data/b_intermediate_data/seagrass_presence"
 ### EPSG:3338 is NAD83 / Alaska Albers (https://epsg.io/3338)
 crs <- "EPSG:3338"
 
-# define vector for region of interest
-roi <- terra::vect("data/a_raw_data/LDA_2016.kml")
-roi <- project(roi, crs)
-
 # import bathymetry as base raster
 bathymetry <- terra::rast("data/b_intermediate_data/canopy_bathymetry/bathymetry.grd")
+
+# define vector for region of interest
+roi <- terra::vect("data/b_intermediate_data/roi/roi.shp")
+roi <- project(roi, crs)
 
 #####################################
 #####################################
@@ -93,6 +93,7 @@ varnames(seagrass_expand) <- "seagrass"
 #seagrass_final <- terra::merge(seagrass_expand, unclass_rast)
 seagrass_final <- seagrass_expand
 names(seagrass_final) <- "seagrass"
+seagrass_final <- crop(seagrass_final, roi)
 
 # plot new raster
 plot(seagrass_final, col = viridis(nrow(seagrass_final), begin = 0.2, end = 0.8))
