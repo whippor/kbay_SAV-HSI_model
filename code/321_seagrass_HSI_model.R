@@ -101,7 +101,7 @@ plet(final_zero,
 # Export data
 ## Suitability
 terra::writeRaster(final_zero, 
-                   filename = file.path(submodel_dir, "seagrass_HSI.tif"), 
+                   filename = file.path(submodel_dir, "seagrass_HSI.grd"), 
                    overwrite = T)
 
 

@@ -94,7 +94,7 @@ plot(subs_mask, col = viridis(nrow(subs_mask), begin = 0.3))
 
 # Export data
 ## Suitability
-terra::writeRaster(subs_mask, 
+terra::writeRaster(subs_mask$HSI_value, 
                    filename = file.path(submodel_dir, "substrateHSI.grd"), 
                    overwrite = T)
 
