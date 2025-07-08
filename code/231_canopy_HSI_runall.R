@@ -28,7 +28,7 @@ pacman::p_load(tidyverse,
 source("code/001_bathymetry.R")
 source("code/002_substrate.R")
 # source("code/003_fetch.R")
-source("code/004_velocity.R")
+# source("code/004_velocity.R")
 source("code/005_canopy_presence.R")
 source("code/211_canopy_bathymetry_submodel.R")
 source("code/212_canopy_substrate_submodel.R")

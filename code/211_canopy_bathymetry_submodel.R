@@ -47,7 +47,7 @@ bathymetry <- terra::rast("data/b_intermediate_data/bathymetry/bathymetry.grd")
 
 tam_bath <- read_csv("data/x_tam_tables/canopy/canopy_depth.csv")
 tam_bath <- tam_bath %>%
-  mutate(depth.m = depth.m - 1.546) %>% # correct for NAVD88/MLLW offset
+  mutate(depth.m = depth.m + 1.546) %>% # correct for NAVD88/MLLW offset
   arrange(depth.m)
 
 #####################################

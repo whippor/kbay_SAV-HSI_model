@@ -49,11 +49,11 @@ roi_dir <- "data/b_intermediate_data/roi"
 
 ## coordinate reference system
 ### EPSG:3338 is NAD83 / Alaska Albers (https://epsg.io/3338)
-crs <- "EPSG:3338"
+# crs <- "EPSG:3338"
 
 # define vector for region of interest
-roi <- terra::vect("data/a_raw_data/LDA_2016.kml")
-roi <- project(roi, crs)
+roi <- terra::vect(roi_dir)
+# roi <- project(roi, crs)
 
 
 #####################################
@@ -68,7 +68,9 @@ terra::crs(bathymetry) # EPSG:4269
 
 units(bathymetry) <- "meters"
 
-
+# mask and crop bathymetry
+bath_mask <- mask(bathymetry, roi)
+bath_crop <- crop(bathymetry, roi)
 #####################################
 #####################################
 
@@ -99,8 +101,15 @@ fetch_roi <- terra::crop(fetch_LCI, roi)
 plot(fetch_roi, col = viridis(nrow(fetch_roi)))
 
 # save fetch raster
-terra::writeRaster(fetch_roi, filename = file.path(fetch_dir, "fetch.grd"), overwrite = T)
+# terra::writeRaster(fetch_roi, filename = file.path(fetch_dir, "fetch.grd"), overwrite = T)
 
 
+####### TEMPORARY PLACEHOLDER TO CONSTRAIN CURRENT FETCH LAYER TO ROI
+# load data
+fetch <- terra::rast("data/b_intermediate_data/fetch/fetch.grd")
+fetch <- fetch/1000
+plot(fetch$lyr.1)
 
-
+fetch_mask <- mask(fetch, roi)
+fetch_crop <- crop(fetch, roi)
+plot(fetch_crop)
