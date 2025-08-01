@@ -92,6 +92,7 @@ final_zero <- merge(presence1, near_zero)
 plot(final_zero, col = viridis(nrow(final_zero)))
 
 plet(final_zero,
+     alpha = 0.5,
      col = viridis(nrow(final_zero)),
      main = "Seagrass HSI")
 

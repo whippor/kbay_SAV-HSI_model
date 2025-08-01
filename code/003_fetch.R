@@ -101,7 +101,7 @@ fetch_roi <- terra::crop(fetch_LCI, roi)
 plot(fetch_roi, col = viridis(nrow(fetch_roi)))
 
 # save fetch raster
-# terra::writeRaster(fetch_roi, filename = file.path(fetch_dir, "fetch.grd"), overwrite = T)
+terra::writeRaster(fetch_roi, filename = file.path(fetch_dir, "fetch.grd"), overwrite = T)
 
 
 ####### TEMPORARY PLACEHOLDER TO CONSTRAIN CURRENT FETCH LAYER TO ROI
