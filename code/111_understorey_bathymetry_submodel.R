@@ -55,7 +55,7 @@ tam_bath <- tam_bath %>%
 
 # Create bathymetry HSI model
 # mask bathymetry to the roi
-bath_mask <- mask(bathymetry, roi)
+bath_mask <- crop(bathymetry, roi)
 
 # extract all values from bath_mask
 vals1 <- data.frame(values(bath_mask))

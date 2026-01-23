@@ -1,6 +1,12 @@
 # Kachemak Bay Submerged Aquatic Vegetation Habitat Suitability Index Model
 
-###### README LAST UPDATED: 2025/04/29
+###### README LAST UPDATED: 2026/01/22
+
+------------------------------------------------------------------------
+
+*DISCLAIMER:*
+
+*This repository is a scientific product and is not official communication of the National Oceanic and Atmospheric Administration, or the United States Department of Commerce. All NOAA GitHub project code is provided on an ‘as is’ basis and the user assumes responsibility for its use. Any claims against the Department of Commerce or Department of Commerce bureaus stemming from the use of this GitHub project will be governed by all applicable Federal law. Any reference to specific commercial products, processes, or services by service mark, trademark, manufacturer, or otherwise, does not constitute or imply their endorsement, recommendation or favoring by the Department of Commerce. The Department of Commerce seal and logo, or the seal and logo of a DOC bureau, shall not be used in any manner to imply endorsement of any commercial product or activity by DOC or the United States Government.*
 
 ------------------------------------------------------------------------
 
@@ -126,7 +132,7 @@ Carrillo, C., S.K. McKay, and T.S. Swannack. 2020. Ecological Model Development:
 ### TAM References
 
 | SAV              | Parameter      | Citation                                                                                                                                                                                                                                                                   |
-|------------------|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|----------|----------|-----------------------------------------------------|
 | canopy kelp      | depth          | Springer YP, Hays CG, Carr MH, Mackey MR. Toward ecosystem-based management of marine macroalgae—The bull kelp, *Nereocystis luetkeana*. Oceanography and marine biology. 2010 May 12;48:1.                                                                                |
 | canopy kelp      | substrate      | Dayton PK. Ecology of kelp communities. Annual review of ecology and systematics. 1985 Jan 1:215-45.                                                                                                                                                                       |
 | canopy kelp      | fetch          | Smale DA, Burrows MT, Evans AJ, King N, Sayer MD, Yunnie AL, Moore PJ. Linking environmental variables with regional-scale variability in ecological structure and standing stock of carbon within UK kelp forests. Marine Ecology Progress Series. 2016 Jan 19;542:79-95. |

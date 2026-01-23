@@ -5,8 +5,8 @@ nodatavalue=nan
 byteorder=little
 nbands=2
 bandorder=BIL
-minvalue=-3.6893488147419103e+19:-2.316641410297795e+38
-maxvalue=3.6893488147419103e+19:3.0135052507564433e+38
+minvalue=-3.6893488147419103e+19:-2.959932916622126e+38
+maxvalue=3.6893488147419103e+19:1.8635477943835155e+35
 categorical=FALSE
 [description]
 layername=KBL-bathymetry_GWA-area_50m_EPSG3338:HSI_value

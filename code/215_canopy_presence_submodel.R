@@ -48,8 +48,8 @@ presence <- terra::rast("data/b_intermediate_data/presence/canopy_presence.tif")
 #####################################
 
 # Create presence HSI model
-# mask presence to the roi
-subs_mask <- mask(presence, roi)
+# crop presence to the roi
+subs_mask <- crop(presence, roi)
 
 # plot to check for correct values
 # plot(subs_mask, col = viridis(nrow(subs_mask)))

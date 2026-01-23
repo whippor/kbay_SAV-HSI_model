@@ -15,7 +15,8 @@ start <- Sys.time()
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse,
                terra, # is replacing the raster package
-               viridis)
+               viridis,
+               tidyterra)
 
 #####################################
 #####################################
@@ -79,14 +80,15 @@ fetch_zero[fetch_zero > 0.01] <- 1
 #velo_zero <- velocity
 #velo_zero[velo_zero < 0.01] <- 0
 #velo_zero[velo_zero > 0.01] <- 1
-final_zero <- under_zero[['mean']] *
+final_zero <- under_zero[["mean"]] *
   sub_zero[["HSI_value"]] *
   bath_zero[["HSI_value"]] *
   fetch_zero[["HSI_value"]] 
 # * velo_zero[["HSI_value"]]
+final_zero <- tidyterra::rename(final_zero, "HSI_value" = "mean")
 
 terra::plot(final_zero, col = viridis(nrow(final_zero)),
-     main = "arithmetic mean")
+     main = "geometric mean")
 
 plet(final_zero,
      col = viridis(nrow(final_zero)),

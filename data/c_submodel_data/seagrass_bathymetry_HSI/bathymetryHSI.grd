@@ -5,7 +5,7 @@ nodatavalue=nan
 byteorder=little
 nbands=2
 bandorder=BIL
-minvalue=-3.6893488147419103e+19:-2.588868058340183e+38
+minvalue=-3.6893488147419103e+19:-3.2694329544413368e+38
 maxvalue=3.6893488147419103e+19:3.2694329544413368e+38
 categorical=FALSE
 [description]

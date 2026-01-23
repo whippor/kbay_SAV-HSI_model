@@ -47,7 +47,7 @@ bathymetry <- terra::rast("data/b_intermediate_data/bathymetry/bathymetry.grd")
 
 tam_bath <- read_csv("data/x_tam_tables/seagrass/seagrass_depth.csv")
 tam_bath <- tam_bath %>%
-  mutate(depth.m = depth.m + 1.546) %>% # correct for NAVD88/MLLW offset
+  mutate(depth.m = depth.m - 1.546) %>% # correct for NAVD88/MLLW offset
   arrange(depth.m)
 
 #####################################
@@ -55,7 +55,7 @@ tam_bath <- tam_bath %>%
 
 # Create bathymetry HSI model
 # mask bathymetry to the roi
-bath_mask <- mask(bathymetry, roi)
+bath_mask <- crop(bathymetry, roi)
 
 # extract all values from bath_roi
 vals1 <- data.frame(values(bath_mask))
