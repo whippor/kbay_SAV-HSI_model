@@ -31,7 +31,7 @@ understorey <- terra::rast("data/d_suitability_data/understorey_HSI/understorey_
 
 canopy <- terra::rast("data/d_suitability_data/canopy_HSI/canopy_HSI.tif")
 
-seagrass <- terra::rast("data/d_suitability_data/seagrass_HSI/seagrass_HSI.tif")
+seagrass <- terra::rast("data/d_suitability_data/seagrass_HSI/seagrass_HSI.grd")
 
 allmax <- terra::rast("data/d_suitability_data/all_HSI/allmax_HSI.tif")
 
@@ -212,8 +212,9 @@ test <- canopyDF %>%
 # mask out all HSI below -7 m, above 3 m
 # bathmask <- clamp(bathymetry_seagr, lower = -10 - MLLWcor, upper = 3 - MLLWcor, values = FALSE)
 bathmask <- clamp(bathymetry_seagr, lower = -10, upper = 3, values = FALSE) # alrerady corrected in submodel?
+bathcrop <- crop(bathmask, seagrass)
 seagrass3 <- mask(seagrass, 
-                 bathmask)
+                 bathcrop)
 plot(seagrass3)
 plet(seagrass3,
      #tiles = "Stadia.AlidadeSmooth",

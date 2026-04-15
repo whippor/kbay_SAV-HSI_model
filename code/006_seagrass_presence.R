@@ -55,13 +55,31 @@ roi <- project(roi, crs)
 #####################################
 
 # load data
+# historic seagrass extents
 seagrass <- terra::vect("data/a_raw_data/Seagrass_presence/KBAY_seagrass.shp")
+seagrass_clean <- seagrass[, 0]
+seagrass_clean$presence <- 1
+# Habitat PAF extents (last updated 2026-04-14)
+KHMseagrass <- read_csv("data/a_raw_data/Seagrass_presence/seagrass_data.csv")
+KHMseagrass_pres <- KHMseagrass |>
+  filter(densityValue != "none") |>
+  select(lat, lon) |>
+  distinct()
+KHM_vect <- vect(KHMseagrass_pres, geom = c("lon", "lat"), crs = "EPSG:4326")
+KHM_vect$presence <- 1
+KHM_vect <- project(KHM_vect, crs(seagrass))
+KHM_vect_poly <- buffer(KHM_vect, width = 1)
+
+
+seagrass_all <- rbind(seagrass_clean, KHM_vect_poly)
 
 ## reproject into Alaska Albers
-seagrass_albers <- project(seagrass, crs)
+seagrass_albers <- project(seagrass_all, crs)
 
 ## make polygons into raster
-seagrass_rast <- rasterize(seagrass_albers, bathymetry)
+seagrass_rast <- rasterize(seagrass_albers, bathymetry, 
+                           field = "presence", fun = "max",
+                           touches = TRUE)
 
 # inspect the data
 ## coordinate reference system

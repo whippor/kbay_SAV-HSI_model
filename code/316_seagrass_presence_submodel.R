@@ -42,7 +42,7 @@ roi <- terra::vect(roi_dir)
 #####################################
 
 # load data
-presence <- terra::rast("data/b_intermediate_data/presence/seagrass_presence.tif")
+presence <- terra::rast("data/b_intermediate_data/seagrass_presence/presence.tif")
 
 #####################################
 #####################################
