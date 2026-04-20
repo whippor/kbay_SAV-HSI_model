@@ -1,6 +1,6 @@
 # Kachemak Bay Submerged Aquatic Vegetation Habitat Suitability Index Model
 
-###### README LAST UPDATED: 2026/01/22
+###### README LAST UPDATED: 2026/04/20
 
 ------------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ This is a repository under active development to model habitat suitability indic
 
 ### Guiding Questions
 
--   What is the theoretical total area that canopy kelps, understorey kelps, and seagrass could colonize in the bay?
+-   What is the theoretical total area that canopy kelps, understorey kelps, and seagrass in the bay?
 
 -   How do HSI values align with past and present observations of seagrass and kelp?
 
@@ -32,13 +32,9 @@ This is a repository under active development to model habitat suitability indic
 
 This project is in active development and will change as additional datasets and analyses are included. The primary short-term goals for the project include:
 
--   ~~Streamline the code volume by reducing duplicated files created for each SAV type to a single reference file (initial code architecture was highly redundant to allow modularity of component SAV parts).~~ **Completed: 2025/03/06**
-
 -   Identify additional environmental parameters and datasets relevant to habitat suitability, especially oceanographic parameters including temperature, salinity, and nutrients.
 
 -   Ensure proper functioning of local fetch calculation code.
-
--   ~~Validate all TAM table values with references.~~ **Completed: 2025/04/28**
 
 -   Perform model selection and sensitivity analyses on models and submodels to identify the number and identity of parameters that explain the most model variance.
 
@@ -54,28 +50,28 @@ This project is in active development and will change as additional datasets and
 
 Once cloned, the code can by run piecemeal for each SAV group and parameter, or the combined HSI model for each SAV type can be run with the **\*\_HSI_model.R** code. Or you can run all data prep and models using the **\*\_HSI_runall.R** code blocks for each SAV. The HSI model for all SAV combined can be run with **721_combined_HSI_model.R.** Alternatively, you can run all the models and submodels using the **731_HSI_runall.R** code block.
 
-| File Name Prefix Value | Content                                     |
-|------------------------|---------------------------------------------|
-| 000                    | functions required for the analysis         |
-| 00\*                   | base layer import, prep, and/or calculation |
-| 1\*\*                  | understorey kelp code components            |
-| 2\*\*                  | canopy kelp code components                 |
-| 3\*\*                  | seagrass code components                    |
-| 7\*\*                  | multi-model execution                       |
-| 888                    | additional analysis and summary             |
-| 999                    | scratch pad                                 |
-| U\*\*                  | uncertainty analysis components             |
-| V\*\*                  | validation analysis components              |
-| \*1\*                  | submodel                                    |
-| \*2\*                  | SAV-specific HSI model                      |
-| \*31                   | "run all" execution                         |
-| \*11                   | bathymetry submodel                         |
-| \*12                   | substrate submodel                          |
-| \*13                   | fetch submodel                              |
-| \*14                   | velocity submodel                           |
-| \*15                   | canopy presence submodel                    |
-| \*16                   | seagrass presence submodel                  |
-| \*21                   | SAV-specific HSI model                      |
+| File Name Prefix Value | Content                                               |
+|------------------------|-------------------------------------------------------|
+| 000                    | functions required for the analysis                   |
+| 00\*                   | base layer import, prep, and/or calculation           |
+| 1\*\*                  | understorey kelp code components                      |
+| 2\*\*                  | canopy kelp code components                           |
+| 3\*\*                  | seagrass code components                              |
+| 7\*\*                  | multi-model execution                                 |
+| 888                    | additional analysis and summary                       |
+| 999                    | scratch pad                                           |
+| U\*\*                  | uncertainty analysis components (*UNDER DEVELOPMENT*) |
+| V\*\*                  | validation analysis components (*UNDER DEVELOPMENT*)  |
+| \*1\*                  | submodel                                              |
+| \*2\*                  | SAV-specific HSI model                                |
+| \*31                   | "run all" execution                                   |
+| \*11                   | bathymetry submodel                                   |
+| \*12                   | substrate submodel                                    |
+| \*13                   | fetch submodel                                        |
+| \*14                   | velocity submodel                                     |
+| \*15                   | canopy presence submodel                              |
+| \*16                   | seagrass presence submodel                            |
+| \*21                   | SAV-specific HSI model                                |
 
 : Code type by naming convention.
 
@@ -132,7 +128,7 @@ Carrillo, C., S.K. McKay, and T.S. Swannack. 2020. Ecological Model Development:
 ### TAM References
 
 | SAV              | Parameter      | Citation                                                                                                                                                                                                                                                                   |
-|----------|----------|-----------------------------------------------------|
+|------------------|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | canopy kelp      | depth          | Springer YP, Hays CG, Carr MH, Mackey MR. Toward ecosystem-based management of marine macroalgae—The bull kelp, *Nereocystis luetkeana*. Oceanography and marine biology. 2010 May 12;48:1.                                                                                |
 | canopy kelp      | substrate      | Dayton PK. Ecology of kelp communities. Annual review of ecology and systematics. 1985 Jan 1:215-45.                                                                                                                                                                       |
 | canopy kelp      | fetch          | Smale DA, Burrows MT, Evans AJ, King N, Sayer MD, Yunnie AL, Moore PJ. Linking environmental variables with regional-scale variability in ecological structure and standing stock of carbon within UK kelp forests. Marine Ecology Progress Series. 2016 Jan 19;542:79-95. |

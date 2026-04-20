@@ -105,6 +105,12 @@ terra::writeRaster(final_zero,
                    filename = file.path(submodel_dir, "seagrass_HSI.grd"), 
                    overwrite = T)
 
+# Export data as tif
+## Suitability
+terra::writeRaster(final_zero, 
+                   filename = file.path(submodel_dir, "seagrass_HSI.tif"), 
+                   overwrite = T)
+
 
 #####################################
 #####################################
