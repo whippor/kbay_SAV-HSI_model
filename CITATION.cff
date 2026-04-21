@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this model, please cite it as below."
+authors:
+- family-names: "Ross"
+  given-names: "Whippo"
+  orcid: "https://orcid.org/0000-0001-5725-2215"
+title: "SAV-HSI Model of Kachemak Bay, AK, USA"
+version: 1.0.0
+date-released: 2026-04-20
+url: "https://github.com/whippor/kbay_SAV-HSI_model"
