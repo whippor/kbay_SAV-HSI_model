@@ -3,7 +3,7 @@
 ##############################
 
 # clear environment
-rm(list=setdiff(ls(), c("all_begin", "master_begin")))
+rm(list = setdiff(ls(), c("all_begin", "master_begin")))
 
 # calculate start time of code (determine how long it takes to complete all code)
 start <- Sys.time()
@@ -13,9 +13,11 @@ start <- Sys.time()
 
 # load packages
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,
-               terra, # is replacing the raster package
-               viridis)
+pacman::p_load(
+  tidyverse,
+  terra, # is replacing the raster package
+  viridis
+)
 
 #####################################
 #####################################
@@ -30,8 +32,10 @@ data_dir <- "data/a_raw_data/a_raw_data/Kelp_presence/"
 intermediate_dir <- "data/b_intermediate_data"
 
 #### substrate directory
-dir.create(paste0(intermediate_dir, "/",
-                  "canopy_presence"))
+dir.create(paste0(
+  intermediate_dir, "/",
+  "canopy_presence"
+))
 
 kelp_dir <- "data/b_intermediate_data/canopy_presence"
 
@@ -69,9 +73,11 @@ k00_rast <- rasterize(k00_albers, bathymetry)
 k01_rast <- rasterize(k01_albers, bathymetry)
 k02_rast <- rasterize(k02_albers, bathymetry)
 
-kelp <- c(k00_rast,
-          k01_rast,
-          k02_rast)
+kelp <- c(
+  k00_rast,
+  k01_rast,
+  k02_rast
+)
 
 # inspect the data
 ## coordinate reference system
@@ -96,7 +102,7 @@ varnames(kelp_expand) <- "kelp"
 #                     nrow = 994,
 #                     xmin = 119250,
 #                     xmax = 172450,
-#                     ymin = 1046527, 
+#                     ymin = 1046527,
 #                     ymax = 1096227,
 #                     crs = crs(kelp_expand))
 
@@ -119,4 +125,3 @@ terra::writeRaster(kelp_final, filename = file.path(kelp_dir, "presence.tif"), o
 
 # calculate end time and print time difference
 print(Sys.time() - start) # print how long it takes to calculate
-

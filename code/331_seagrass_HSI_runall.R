@@ -17,9 +17,11 @@ all_begin <- Sys.time()
 
 # load packages
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,
-               terra, # is replacing the raster package
-               viridis)
+pacman::p_load(
+  tidyverse,
+  terra, # is replacing the raster package
+  viridis
+)
 
 #####################################
 #####################################
@@ -41,8 +43,9 @@ source("code/321_seagrass_HSI_model.R")
 plot(final_zero, col = viridis(nrow(final_zero)))
 
 plet(final_zero,
-     col = viridis(nrow(final_zero)),
-     main = "Seagrass HSI")
+  col = viridis(nrow(final_zero)),
+  main = "Seagrass HSI"
+)
 
 
 #####################################
@@ -50,6 +53,3 @@ plet(final_zero,
 
 # calculate end time and print time difference
 print(Sys.time() - all_begin) # print how long it takes to calculate
-
-
-

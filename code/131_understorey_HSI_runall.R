@@ -17,9 +17,11 @@ all_begin <- Sys.time()
 
 # load packages
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,
-               terra, # is replacing the raster package
-               viridis)
+pacman::p_load(
+  tidyverse,
+  terra, # is replacing the raster package
+  viridis
+)
 
 #####################################
 #####################################
@@ -38,15 +40,13 @@ source("code/121_understorey_HSI_model.R")
 
 plot(final_zero, col = viridis(nrow(final_zero), begin = 0.3))
 
-plet(final_zero, 
-     col = viridis(nrow(final_zero)),
-     main = "Understorey Kelp HSI")
+plet(final_zero,
+  col = viridis(nrow(final_zero)),
+  main = "Understorey Kelp HSI"
+)
 
 #####################################
 #####################################
 
 # calculate end time and print time difference
 print(Sys.time() - all_begin) # print how long it takes to calculate
-
-
-

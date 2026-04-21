@@ -3,7 +3,7 @@
 #####################
 
 # clear environment
-rm(list=setdiff(ls(), c("all_begin", "master_begin")))
+rm(list = setdiff(ls(), c("all_begin", "master_begin")))
 
 # calculate start time of code (determine how long it takes to complete all code)
 start <- Sys.time()
@@ -13,9 +13,11 @@ start <- Sys.time()
 
 # load packages
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,
-               terra, # is replacing the raster package
-               viridis)
+pacman::p_load(
+  tidyverse,
+  terra, # is replacing the raster package
+  viridis
+)
 
 #####################################
 #####################################
@@ -30,8 +32,10 @@ data_dir <- "data/a_raw_data/CookInlet_current"
 intermediate_dir <- "data/b_intermediate_data"
 
 #### velocity directory
-dir.create(paste0(intermediate_dir, "/",
-                  "velocity"))
+dir.create(paste0(
+  intermediate_dir, "/",
+  "velocity"
+))
 
 velocity_dir <- "data/b_intermediate_data/velocity"
 
@@ -102,5 +106,3 @@ terra::writeRaster(velo_roi, filename = file.path(velocity_dir, "velocity.grd"),
 
 # calculate end time and print time difference
 print(Sys.time() - start) # print how long it takes to calculate
-
-

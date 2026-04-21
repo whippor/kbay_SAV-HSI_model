@@ -3,7 +3,7 @@
 #####################################
 
 # clear environment
-rm(list=setdiff(ls(), c("all_begin", "master_begin")))
+rm(list = setdiff(ls(), c("all_begin", "master_begin")))
 
 # calculate start time of code (determine how long it takes to complete all code)
 start <- Sys.time()
@@ -13,9 +13,11 @@ start <- Sys.time()
 
 # load packages
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,
-               terra, # is replacing the raster package
-               viridis)
+pacman::p_load(
+  tidyverse,
+  terra, # is replacing the raster package
+  viridis
+)
 
 #####################################
 #####################################
@@ -58,10 +60,12 @@ subs_mask <- crop(presence, roi)
 vals1 <- data.frame(values(subs_mask))
 index_vals <- vals1 |>
   mutate(sumkelp = rowSums(across(c(kelp, kelp.1, kelp.2)), na.rm = TRUE)) |>
-  mutate(presence = case_when(sumkelp == 1 ~ 1,
-                              sumkelp == 2 ~ 1,
-                              sumkelp == 3 ~ 1,
-                              sumkelp == 0 ~ 0.5)) |>
+  mutate(presence = case_when(
+    sumkelp == 1 ~ 1,
+    sumkelp == 2 ~ 1,
+    sumkelp == 3 ~ 1,
+    sumkelp == 0 ~ 0.5
+  )) |>
   select(presence)
 
 # join HSI values with raster
@@ -79,9 +83,10 @@ plot(hsi_mask, col = viridis(nrow(hsi_mask), begin = 0.3))
 
 # Export data
 ## Suitability
-terra::writeRaster(hsi_mask, 
-                   filename = file.path(submodel_dir, "presenceHSI.grd"), 
-                   overwrite = T)
+terra::writeRaster(hsi_mask,
+  filename = file.path(submodel_dir, "presenceHSI.grd"),
+  overwrite = T
+)
 
 
 #####################################
@@ -89,6 +94,3 @@ terra::writeRaster(hsi_mask,
 
 # calculate end time and print time difference
 print(Sys.time() - start) # print how long it takes to calculate
-
-
-

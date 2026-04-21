@@ -3,7 +3,7 @@
 ######################################
 
 # clear environment
-rm(list=setdiff(ls(), c("all_begin", "master_begin")))
+rm(list = setdiff(ls(), c("all_begin", "master_begin")))
 
 # calculate start time of code (determine how long it takes to complete all code)
 start <- Sys.time()
@@ -13,9 +13,11 @@ start <- Sys.time()
 
 # load packages
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,
-               terra, # is replacing the raster package
-               viridis)
+pacman::p_load(
+  tidyverse,
+  terra, # is replacing the raster package
+  viridis
+)
 
 #####################################
 #####################################
@@ -75,9 +77,9 @@ subs_values <- data.frame(levels(subs_mask))
 tam_subs_new <- tam_subs |>
   rename("subclass" = "substrate.class")
 join_ID <- tam_subs_new |>
-  full_join(subs_values) 
+  full_join(subs_values)
 
-# join HSI and raster values 
+# join HSI and raster values
 index_vals <- vals1 |>
   left_join(join_ID) |>
   select(substrate.class.SIV)
@@ -94,9 +96,10 @@ plot(subs_mask, col = viridis(nrow(subs_mask)))
 
 # Export data
 ## Suitability
-terra::writeRaster(subs_mask, 
-                   filename = file.path(submodel_dir, "substrateHSI.grd"), 
-                   overwrite = T)
+terra::writeRaster(subs_mask,
+  filename = file.path(submodel_dir, "substrateHSI.grd"),
+  overwrite = T
+)
 
 
 #####################################
@@ -104,6 +107,3 @@ terra::writeRaster(subs_mask,
 
 # calculate end time and print time difference
 print(Sys.time() - start) # print how long it takes to calculate
-
-
-

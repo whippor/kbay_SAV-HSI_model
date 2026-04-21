@@ -3,7 +3,7 @@
 #####################################
 
 # clear environment
-rm(list=setdiff(ls(), c("all_begin", "master_begin")))
+rm(list = setdiff(ls(), c("all_begin", "master_begin")))
 
 # calculate start time of code (determine how long it takes to complete all code)
 start <- Sys.time()
@@ -13,9 +13,11 @@ start <- Sys.time()
 
 # load packages
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,
-               terra, # is replacing the raster package
-               viridis)
+pacman::p_load(
+  tidyverse,
+  terra, # is replacing the raster package
+  viridis
+)
 source("code/000_function_interpolate_y.R")
 
 #####################################
@@ -78,9 +80,10 @@ plot(velo_mask, col = viridis(nrow(velo_mask), begin = 0.3))
 
 # Export data
 ## Suitability
-terra::writeRaster(velo_mask, 
-                   filename = file.path(submodel_dir, "velocityHSI.grd"), 
-                   overwrite = T)
+terra::writeRaster(velo_mask,
+  filename = file.path(submodel_dir, "velocityHSI.grd"),
+  overwrite = T
+)
 
 
 #####################################
@@ -88,6 +91,3 @@ terra::writeRaster(velo_mask,
 
 # calculate end time and print time difference
 print(Sys.time() - start) # print how long it takes to calculate
-
-
-

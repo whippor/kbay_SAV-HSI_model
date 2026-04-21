@@ -5,7 +5,7 @@
 ######### NOT WORKING
 
 # clear environment
-rm(list=setdiff(ls(), c("all_begin", "master_begin")))
+rm(list = setdiff(ls(), c("all_begin", "master_begin")))
 
 # calculate start time of code (determine how long it takes to complete all code)
 start <- Sys.time()
@@ -15,9 +15,11 @@ start <- Sys.time()
 
 # load packages
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,
-               terra, # is replacing the raster package
-               viridis)
+pacman::p_load(
+  tidyverse,
+  terra, # is replacing the raster package
+  viridis
+)
 source("code/000_function_get_fetch.R")
 source("code/000_function_get_landwater.R")
 source("code/000_function_prep_raster.R")
@@ -35,8 +37,10 @@ data_dir <- "data/a_raw_data/bathymetry"
 intermediate_dir <- "data/b_intermediate_data"
 
 #### fetch directory
-dir.create(paste0(intermediate_dir, "/",
-                  "fetch"))
+dir.create(paste0(
+  intermediate_dir, "/",
+  "fetch"
+))
 fetch_dir <- "data/b_intermediate_data/fetch"
 
 #### roi directory
@@ -85,13 +89,13 @@ terra::plot(landwater, col = c("#2e8b57", "#add8e6"))
 # run fetchr on entire bathymetry (takes ~4.5 hours)
 start <- Sys.time()
 fetch_LCI <- get_fetch(
-  r = landwater,     # binary land water raster
-  max_dist    = 200000,        # maximum distance to calculate fetch in meters (200km)
+  r = landwater, # binary land water raster
+  max_dist = 200000, # maximum distance to calculate fetch in meters (200km)
   in_parallel = FALSE
 )
 print(Sys.time() - start)
 
-#plot to check entire layer
+# plot to check entire layer
 plot(fetch_LCI)
 
 # constrain bathymetry to roi
@@ -107,7 +111,7 @@ terra::writeRaster(fetch_roi, filename = file.path(fetch_dir, "fetch.grd"), over
 ####### TEMPORARY PLACEHOLDER TO CONSTRAIN CURRENT FETCH LAYER TO ROI
 # load data
 fetch <- terra::rast("data/b_intermediate_data/fetch/fetch.grd")
-fetch <- fetch/1000
+fetch <- fetch / 1000
 plot(fetch$lyr.1)
 
 fetch_mask <- mask(fetch, roi)

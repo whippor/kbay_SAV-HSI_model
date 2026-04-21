@@ -17,9 +17,11 @@ master_begin <- Sys.time()
 
 # load packages
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,
-               terra, # is replacing the raster package
-               viridis)
+pacman::p_load(
+  tidyverse,
+  terra, # is replacing the raster package
+  viridis
+)
 
 #####################################
 #####################################
@@ -41,6 +43,3 @@ source("code/721_combined_HSI_model.R")
 
 # calculate end time and print time difference
 print(Sys.time() - master_begin) # print how long it takes to calculate
-
-
-

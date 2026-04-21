@@ -3,7 +3,7 @@
 ###################################
 
 # clear environment
-rm(list=setdiff(ls(), c("all_begin", "master_begin")))
+rm(list = setdiff(ls(), c("all_begin", "master_begin")))
 
 # calculate start time of code (determine how long it takes to complete all code)
 start <- Sys.time()
@@ -13,10 +13,12 @@ start <- Sys.time()
 
 # load packages
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,
-               terra, # is replacing the raster package
-               viridis,
-               tidyterra)
+pacman::p_load(
+  tidyverse,
+  terra, # is replacing the raster package
+  viridis,
+  tidyterra
+)
 
 #####################################
 #####################################
@@ -49,23 +51,25 @@ fetch <- terra::rast("data/c_submodel_data/understorey_fetch_HSI/fetchHSI.grd")
 
 
 # create arithmetic mean-value HSI for understorey (bathymetry, substrate, fetch)
-# under_mean <- mean(substrate[["HSI_value"]], 
+# under_mean <- mean(substrate[["HSI_value"]],
 #                    bathymetry[["HSI_value"]],
 #                    fetch[["HSI_value"]]
 #                   # , velocity[["HSI_value"]]
 #                    )
 
 # create geometric mean-value HSI for understorey (bathymetry, substrate, fetch)
-under_mean <- exp(mean(log(c((substrate[["HSI_value"]] + 1), 
-                             (bathymetry[["HSI_value"]] + 1),
-                             (fetch[["HSI_value"]] + 1)))))
+under_mean <- exp(mean(log(c(
+  (substrate[["HSI_value"]] + 1),
+  (bathymetry[["HSI_value"]] + 1),
+  (fetch[["HSI_value"]] + 1)
+))))
 
 # weighted mean HSI
 # under_mean <- c(substrate[["HSI_value"]], bathymetry[["HSI_value"]])
 # under_mean <- terra::weighted.mean(under_mean, c(2, 1))
 # names(under_mean) <- "HSI_value"
 
-# create HSI setting any zero to zero 
+# create HSI setting any zero to zero
 # under_zero <- under_mean # for arithmetic
 under_zero <- (under_mean - 1) # for geometric
 sub_zero <- substrate
@@ -77,31 +81,35 @@ bath_zero[bath_zero > 0.01] <- 1
 fetch_zero <- fetch
 fetch_zero[fetch_zero < 0.01] <- 0
 fetch_zero[fetch_zero > 0.01] <- 1
-#velo_zero <- velocity
-#velo_zero[velo_zero < 0.01] <- 0
-#velo_zero[velo_zero > 0.01] <- 1
+# velo_zero <- velocity
+# velo_zero[velo_zero < 0.01] <- 0
+# velo_zero[velo_zero > 0.01] <- 1
 final_zero <- under_zero[["mean"]] *
   sub_zero[["HSI_value"]] *
   bath_zero[["HSI_value"]] *
-  fetch_zero[["HSI_value"]] 
+  fetch_zero[["HSI_value"]]
 # * velo_zero[["HSI_value"]]
 final_zero <- tidyterra::rename(final_zero, "HSI_value" = "mean")
 
-terra::plot(final_zero, col = viridis(nrow(final_zero)),
-     main = "geometric mean")
+terra::plot(final_zero,
+  col = viridis(nrow(final_zero)),
+  main = "geometric mean"
+)
 
 plet(final_zero,
-     col = viridis(nrow(final_zero)),
-     main = "Understorey Kelp HSI")
+  col = viridis(nrow(final_zero)),
+  main = "Understorey Kelp HSI"
+)
 
 #####################################
 #####################################
 
 # Export data
 ## Suitability
-terra::writeRaster(final_zero, 
-                   filename = file.path(submodel_dir, "understorey_HSI.tif"), 
-                   overwrite = T)
+terra::writeRaster(final_zero,
+  filename = file.path(submodel_dir, "understorey_HSI.tif"),
+  overwrite = T
+)
 
 
 #####################################
@@ -109,6 +117,3 @@ terra::writeRaster(final_zero,
 
 # calculate end time and print time difference
 print(Sys.time() - start) # print how long it takes to calculate
-
-
-

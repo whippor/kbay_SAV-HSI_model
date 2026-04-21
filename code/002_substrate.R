@@ -3,7 +3,7 @@
 #######################
 
 # clear environment
-rm(list=setdiff(ls(), c("all_begin", "master_begin")))
+rm(list = setdiff(ls(), c("all_begin", "master_begin")))
 
 # calculate start time of code (determine how long it takes to complete all code)
 start <- Sys.time()
@@ -13,9 +13,11 @@ start <- Sys.time()
 
 # load packages
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,
-               terra, # is replacing the raster package
-               viridis)
+pacman::p_load(
+  tidyverse,
+  terra, # is replacing the raster package
+  viridis
+)
 
 #####################################
 #####################################
@@ -30,8 +32,10 @@ data_dir <- "data/a_raw_data/substrate"
 intermediate_dir <- "data/b_intermediate_data"
 
 #### substrate directory
-dir.create(paste0(intermediate_dir, "/",
-                  "substrate"))
+dir.create(paste0(
+  intermediate_dir, "/",
+  "substrate"
+))
 
 substrate_dir <- "data/b_intermediate_data/substrate"
 
@@ -63,24 +67,29 @@ segs_albers <- project(intertidal_segs, crs)
 
 ## reduce to fewer categories
 subs_df <- data.frame(subs_albers)
-subs_df <- subs_df |> 
+subs_df <- subs_df |>
   mutate(A = coalesce(Sub_subgr, Sub_grp)) |>
   mutate(substrate = coalesce(A, Class))
-avoid <- c("Void", 
-           "Shell 50-90%, Cobble/gravel 0-10%",
-           "Shell 90-100%")
-subs_df$substrate <- replace(subs_df$substrate, 
-                             subs_df$substrate %in% avoid, 
-                             "Unclassified")
+avoid <- c(
+  "Void",
+  "Shell 50-90%, Cobble/gravel 0-10%",
+  "Shell 90-100%"
+)
+subs_df$substrate <- replace(
+  subs_df$substrate,
+  subs_df$substrate %in% avoid,
+  "Unclassified"
+)
 subs_albers[["substrate"]] <- subs_df$substrate
 
 segs_df <- data.frame(segs_albers)
 segs_df <- segs_df |>
   mutate(subclass = case_when(subclass == "Rubble" ~ "Boulder",
-                              subclass == "Cobble/Gravel" ~ "Cobble/Pebble",
-                              subclass == "Mud/Organic" ~ "Mud",
-                              is.na(subclass) ~ "Unclassified",
-                              .default = subclass))
+    subclass == "Cobble/Gravel" ~ "Cobble/Pebble",
+    subclass == "Mud/Organic" ~ "Mud",
+    is.na(subclass) ~ "Unclassified",
+    .default = subclass
+  ))
 segs_albers[["subclass"]] <- segs_df$subclass
 
 
@@ -110,14 +119,16 @@ varnames(subs_expand) <- "substrate"
 
 
 # fill empty space in raster with Unclassified
-unclass_rast <- rast(ncol = 1064,
-                     nrow = 994,
-                     xmin = 119250,
-                     xmax = 172450,
-                     ymin = 1046527, 
-                     ymax = 1096227,
-                     crs = crs(subs_expand))
-levels(unclass_rast) <- "Unclassified" 
+unclass_rast <- rast(
+  ncol = 1064,
+  nrow = 994,
+  xmin = 119250,
+  xmax = 172450,
+  ymin = 1046527,
+  ymax = 1096227,
+  crs = crs(subs_expand)
+)
+levels(unclass_rast) <- "Unclassified"
 values(unclass_rast) <- 5
 names(unclass_rast) <- "substrate"
 subs_final <- terra::merge(subs_expand, unclass_rast)
@@ -136,18 +147,19 @@ subs_df <- data.frame(subs_final)
 joined_df <- bind_cols(segs_df, subs_df)
 joined_df <- joined_df |>
   mutate(substrate = case_when(subclass == "Mud" ~ "Mud",
-                               subclass == "Sand" ~ "Sand",
-                               subclass == "Boulder" ~ "Boulder",
-                               subclass == "Cobble/Pebble" ~ "Cobble/Pebble",
-                               subclass == "Bedrock" ~ "Bedrock",
-                               .default = substrate))
+    subclass == "Sand" ~ "Sand",
+    subclass == "Boulder" ~ "Boulder",
+    subclass == "Cobble/Pebble" ~ "Cobble/Pebble",
+    subclass == "Bedrock" ~ "Bedrock",
+    .default = substrate
+  ))
 values(segs_expanded) <- joined_df$substrate
 segs_expanded <- crop(segs_expanded, roi)
-plot(segs_expanded, plg=list( # parameters for drawing legend
-                title = "Substrate",
-                title.cex = 2, # Legend title size
-                cex = 2 # Legend text size
-            ))
+plot(segs_expanded, plg = list( # parameters for drawing legend
+  title = "Substrate",
+  title.cex = 2, # Legend title size
+  cex = 2 # Legend text size
+))
 
 
 #####################################
@@ -161,5 +173,3 @@ terra::writeRaster(segs_expanded, filename = file.path(substrate_dir, "substrate
 
 # calculate end time and print time difference
 print(Sys.time() - start) # print how long it takes to calculate
-
-
