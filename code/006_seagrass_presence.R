@@ -45,7 +45,7 @@ seagrass_dir <- "data/b_intermediate_data/seagrass_presence"
 crs <- "EPSG:3338"
 
 # import bathymetry as base raster
-bathymetry <- terra::rast("data/b_intermediate_data/canopy_bathymetry/bathymetry.grd")
+bathymetry <- terra::rast("data/b_intermediate_data/bathymetry/bathymetry.grd")
 
 # define vector for region of interest
 roi <- terra::vect("data/b_intermediate_data/roi/roi.shp")

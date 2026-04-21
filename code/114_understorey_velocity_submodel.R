@@ -46,7 +46,7 @@ roi <- terra::vect(roi_dir)
 velocity <- terra::rast("data/b_intermediate_data/velocity/velocity.grd")
 
 tam_velo <- read_csv("data/x_tam_tables/understorey/understorey_velocity.csv")
-tam_velo <- tam_velo %>%
+tam_velo <- tam_velo |>
   arrange(velocity.ms)
 
 #####################################

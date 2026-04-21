@@ -48,7 +48,7 @@ fetch <- crop(fetch, roi)
 fetch <- fetch/1000
 
 tam_fetch <- read_csv("data/x_tam_tables/seagrass/seagrass_fetch.csv")
-tam_fetch <- tam_fetch %>%
+tam_fetch <- tam_fetch |>
   arrange(fetch.km)
 
 #####################################

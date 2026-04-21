@@ -42,7 +42,7 @@ roi <- terra::vect(roi_dir)
 #####################################
 
 # load data
-presence <- terra::rast("data/b_intermediate_data/presence/canopy_presence.tif")
+presence <- terra::rast("data/b_intermediate_data/canopy_presence/presence.tif")
 
 #####################################
 #####################################
@@ -56,12 +56,12 @@ subs_mask <- crop(presence, roi)
 
 # extract all values from subs roi and give 50/50 chance of kelp in unknown areas
 vals1 <- data.frame(values(subs_mask))
-index_vals <- vals1 %>%
-  mutate(sumkelp = rowSums(select(.,c("kelp", "kelp.1", "kelp.2")), na.rm = TRUE)) %>%
+index_vals <- vals1 |>
+  mutate(sumkelp = rowSums(across(c(kelp, kelp.1, kelp.2)), na.rm = TRUE)) |>
   mutate(presence = case_when(sumkelp == 1 ~ 1,
                               sumkelp == 2 ~ 1,
                               sumkelp == 3 ~ 1,
-                              sumkelp == 0 ~ 0.5)) %>%
+                              sumkelp == 0 ~ 0.5)) |>
   select(presence)
 
 # join HSI values with raster

@@ -45,7 +45,7 @@ substrate_dir <- "data/b_intermediate_data/substrate"
 crs <- "EPSG:3338"
 
 # import bathymetry as base raster
-bathymetry <- terra::rast("data/b_intermediate_data/understorey_bathymetry/bathymetry.grd")
+bathymetry <- terra::rast("data/b_intermediate_data/bathymetry/bathymetry.grd")
 
 # read in roi
 roi <- terra::vect("data/b_intermediate_data/roi/roi.shp")
@@ -63,8 +63,8 @@ segs_albers <- project(intertidal_segs, crs)
 
 ## reduce to fewer categories
 subs_df <- data.frame(subs_albers)
-subs_df <- subs_df %>% 
-  mutate(A = coalesce(Sub_subgr, Sub_grp)) %>%
+subs_df <- subs_df |> 
+  mutate(A = coalesce(Sub_subgr, Sub_grp)) |>
   mutate(substrate = coalesce(A, Class))
 avoid <- c("Void", 
            "Shell 50-90%, Cobble/gravel 0-10%",
@@ -75,7 +75,7 @@ subs_df$substrate <- replace(subs_df$substrate,
 subs_albers[["substrate"]] <- subs_df$substrate
 
 segs_df <- data.frame(segs_albers)
-segs_df <- segs_df %>%
+segs_df <- segs_df |>
   mutate(subclass = case_when(subclass == "Rubble" ~ "Boulder",
                               subclass == "Cobble/Gravel" ~ "Cobble/Pebble",
                               subclass == "Mud/Organic" ~ "Mud",
@@ -134,16 +134,16 @@ segs_expanded <- terra::merge(segs_rast, unclass_rast)
 segs_df <- data.frame(segs_expanded)
 subs_df <- data.frame(subs_final)
 joined_df <- bind_cols(segs_df, subs_df)
-joined_df <- joined_df %>%
+joined_df <- joined_df |>
   mutate(substrate = case_when(subclass == "Mud" ~ "Mud",
                                subclass == "Sand" ~ "Sand",
                                subclass == "Boulder" ~ "Boulder",
                                subclass == "Cobble/Pebble" ~ "Cobble/Pebble",
                                subclass == "Bedrock" ~ "Bedrock",
                                .default = substrate))
-values(segs_rast) <- joined_df$substrate
-segs_rast <- crop(segs_rast, roi)
-plot(segs_rast, plg=list( # parameters for drawing legend
+values(segs_expanded) <- joined_df$substrate
+segs_expanded <- crop(segs_expanded, roi)
+plot(segs_expanded, plg=list( # parameters for drawing legend
                 title = "Substrate",
                 title.cex = 2, # Legend title size
                 cex = 2 # Legend text size
@@ -154,7 +154,7 @@ plot(segs_rast, plg=list( # parameters for drawing legend
 #####################################
 
 # export raster file
-terra::writeRaster(segs_rast, filename = file.path(substrate_dir, "substrate.tif"), overwrite = T)
+terra::writeRaster(segs_expanded, filename = file.path(substrate_dir, "substrate.tif"), overwrite = T)
 
 #####################################
 #####################################

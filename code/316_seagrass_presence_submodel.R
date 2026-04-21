@@ -56,8 +56,8 @@ subs_mask <- mask(presence, roi)
 
 # extract all values from subs roi and give 50/50 chance of kelp in unknown areas
 vals1 <- data.frame(values(subs_mask))
-index_vals <- vals1 %>%
-  mutate(presence = seagrass) %>%
+index_vals <- vals1 |>
+  mutate(presence = seagrass) |>
   select(presence)
 
 # join HSI values with raster

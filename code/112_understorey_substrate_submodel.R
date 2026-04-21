@@ -58,7 +58,7 @@ subs_mask <- mask(substrate, roi)
 
 # extract all values from subs mask
 vals1 <- data.frame(values(subs_mask))
-vals1 <- vals1 %>%
+vals1 <- vals1 |>
   rename("value" = "subclass")
 
 # ASSIGN HSI VALUES TO EACH SUBSTRATE CLASS
@@ -72,14 +72,14 @@ subs_values <- data.frame(levels(subs_mask))
 ### 5 Unclassified
 
 ## join tam and values tables
-tam_subs_new <- tam_subs %>%
+tam_subs_new <- tam_subs |>
   rename("subclass" = "substrate.class")
-join_ID <- tam_subs_new %>%
+join_ID <- tam_subs_new |>
   full_join(subs_values) 
 
 # join HSI and raster values 
-index_vals <- vals1 %>%
-  left_join(join_ID) %>%
+index_vals <- vals1 |>
+  left_join(join_ID) |>
   select(substrate.class.SIV)
 
 # join HSI values with raster

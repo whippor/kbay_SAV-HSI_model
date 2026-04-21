@@ -47,7 +47,7 @@ fetch <- terra::rast("data/b_intermediate_data/fetch/fetch.grd")
 fetch <- fetch/1000
 
 tam_fetch <- read_csv("data/x_tam_tables/understorey/understorey_fetch.csv")
-tam_fetch <- tam_fetch %>%
+tam_fetch <- tam_fetch |>
   arrange(fetch.km)
 
 #####################################
