@@ -62,9 +62,6 @@ fetch_mask <- mask(fetch, roi)
 # extract all values from bath_roi
 vals1 <- data.frame(values(fetch_mask))
 
-## Calculate slopes
-slopes <- diff(tam_fetch$fetch.km.SIV) / diff(tam_fetch$fetch.km)
-
 # calculate index from raster values with function
 index_vals <- interpolate_y(vals1$lyr.1, tam_fetch)
 

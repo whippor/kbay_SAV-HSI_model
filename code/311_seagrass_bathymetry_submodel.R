@@ -62,11 +62,6 @@ bath_mask <- crop(bathymetry, roi)
 # extract all values from bath_roi
 vals1 <- data.frame(values(bath_mask))
 
-# FUNCTION TO FIND Y FOR ANY GIVEN X WITH IMPORTED SLOPES
-
-## Calculate slopes
-slopes <- diff(tam_bath$depth.m.SIV) / diff(tam_bath$depth.m)
-
 # calculate index from raster values with function
 index_vals <- interpolate_y(vals1$KBL.bathymetry_GWA.area_50m_EPSG3338, tam_bath)
 
